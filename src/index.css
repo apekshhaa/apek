@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    overscroll-behavior: none;
+    font-family: 'Geist', sans-serif;
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 16px);
+  }
+}
+
+.living-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(0.96); opacity: 0.15; }
+  50% { transform: scale(1.04); opacity: 0.35; }
+}
+
+@keyframes pulse-medium {
+  0%, 100% { transform: scale(0.98); opacity: 0.1; }
+  50% { transform: scale(1.02); opacity: 0.25; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+.animate-pulse-medium {
+  animation: pulse-medium 2.5s ease-in-out infinite;
+}

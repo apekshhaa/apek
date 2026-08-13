@@ -1,0 +1,6 @@
+{
+  "name": "PoshanEye",
+  "description": "AI-powered child growth and nutrition tracking app with WHO standards monitoring, camera scan, distraction mode, and voice assistant.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
