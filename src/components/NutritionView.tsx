@@ -79,7 +79,7 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
   };
 
   const renderMealIcon = (icon: string) => {
-    const iconClass = isDarkMode ? "text-[#3fff80]" : "text-[#4f6951]";
+    const iconClass = isDarkMode ? "text-[#3fff80]" : "text-[#173124]";
     switch (icon) {
       case "sun":
         return <Sun className={`w-5 h-5 ${iconClass}`} />;
@@ -114,56 +114,66 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
   };
 
   return (
-    <div className="flex flex-col w-full relative pt-20 pb-32 px-5 max-w-lg mx-auto">
-      <h1 className={`text-3xl font-bold tracking-tight mb-2 ${isDarkMode ? "text-[#ffffff]" : "text-[#173124]"}`}>
-        {child.name}'s Nutrition Plan
-      </h1>
-      <p className={`text-sm mb-8 leading-relaxed ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>
-        Here is a gentle, nourishing meal guide for today. Feel free to swap items based on what {child.name} is in the mood for.
-      </p>
+    <div className="flex flex-col w-full relative pt-4 pb-28 px-5 max-w-lg mx-auto gap-5">
+      {/* Header */}
+      <div className="flex flex-col items-start w-full">
+        <h1 className={`font-['Sora',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight leading-tight ${
+          isDarkMode ? "text-white" : "text-[#173124]"
+        }`}>
+          {child.name}'s Nutrition Plan
+        </h1>
+        <p className={`font-['Manrope',sans-serif] text-sm sm:text-base font-medium tracking-normal mt-1 ${
+          isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+        }`}>
+          Nourishing meal guide tailored for today.
+        </p>
+      </div>
 
       {/* Timeline List */}
-      <div className={`relative pl-12 space-y-6 before:content-[''] before:absolute before:left-5 before:top-4 before:bottom-4 before:w-[2px] ${
-        isDarkMode ? "before:bg-[#22392b]" : "before:bg-[#bfc9bf]"
+      <div className={`relative pl-12 space-y-6 mt-2 before:content-[''] before:absolute before:left-5 before:top-4 before:bottom-4 before:w-[2px] ${
+        isDarkMode ? "before:bg-[#22392b]" : "before:bg-[#cae8c9]"
       }`}>
         {meals.map((meal) => (
           <div key={meal.id} className="relative">
-            <div className={`absolute -left-12 top-1 w-10 h-10 rounded-full flex items-center justify-center shadow-xs z-10 border ${
-              isDarkMode ? "bg-[#1f3829] border-[#294a36]" : "bg-[#cae8c9] border-transparent"
+            <div className={`absolute -left-12 top-1 w-10 h-10 rounded-full flex items-center justify-center shadow-xs z-10 border transition-transform hover:scale-105 ${
+              isDarkMode ? "bg-[#1f3829] border-[#294a36]" : "bg-[#cae8c9] border-transparent text-[#173124]"
             }`}>
               {renderMealIcon(meal.icon)}
             </div>
 
-            <div className={`p-5 rounded-2xl border transition-colors ${
-              isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white border-[#e3e2df]/80"
+            <div className={`p-5 sm:p-6 rounded-3xl border shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all ${
+              isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
             }`}>
-              <div className="flex justify-between items-start mb-1">
-                <h2 className={`text-lg font-bold ${isDarkMode ? "text-[#ffffff]" : "text-[#173124]"}`}>
+              <div className="flex justify-between items-center mb-2">
+                <h2 className={`font-['Sora',sans-serif] text-lg sm:text-xl font-bold ${
+                  isDarkMode ? "text-white" : "text-[#173124]"
+                }`}>
                   {meal.mealType}
                 </h2>
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-md ${
+                <span className={`font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-wider px-3 py-1 rounded-lg ${
                   isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#efeeea] text-[#424844]"
                 }`}>
                   {meal.time}
                 </span>
               </div>
-              <p className={`text-sm mb-3 font-medium leading-normal ${
+
+              <p className={`font-['Manrope',sans-serif] text-sm sm:text-[15px] font-medium leading-relaxed mb-4 ${
                 isDarkMode ? "text-[#e5e7eb]" : "text-[#1b1c1a]"
               }`}>
                 {meal.title}
               </p>
 
-              <div className={`flex items-center justify-between flex-wrap gap-2 pt-2 border-t ${
+              <div className={`flex items-center justify-between flex-wrap gap-2 pt-3 border-t ${
                 isDarkMode ? "border-[#22392b]" : "border-[#efeeea]"
               }`}>
                 <div className="flex flex-wrap gap-1.5">
                   {meal.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className={`text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 ${
+                      className={`font-['Space_Grotesk',sans-serif] text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 ${
                         isDarkMode
                           ? "bg-[#1f3829] text-[#3fff80]"
-                          : `${tag.textClass} ${tag.bgClass}`
+                          : "bg-[#cae8c9]/80 text-[#173124]"
                       }`}
                     >
                       {renderTagIcon(tag.icon)}
@@ -175,8 +185,8 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
                 <button
                   onClick={() => handleSwapMeal(meal.id)}
                   disabled={swappingId === meal.id}
-                  className={`text-xs font-bold flex items-center gap-1 active:scale-95 transition-all ${
-                    isDarkMode ? "text-[#3fff80] hover:text-[#52ff8f]" : "text-[#173124] hover:underline"
+                  className={`font-['Manrope',sans-serif] text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all ${
+                    isDarkMode ? "text-[#3fff80] hover:text-[#52ff8f]" : "text-[#173124] hover:opacity-80"
                   }`}
                 >
                   <RefreshCw
@@ -190,16 +200,25 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
         ))}
       </div>
 
-      <div className={`mt-8 p-5 rounded-2xl border flex items-start gap-4 transition-colors ${
-        isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-[#f4f4f0] border-[#e3e2df]"
+      {/* Tip Banner */}
+      <div className={`p-6 rounded-3xl border flex items-start gap-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all ${
+        isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
       }`}>
-        <Lightbulb className={`w-7 h-7 shrink-0 mt-0.5 ${isDarkMode ? "text-[#3fff80]" : "text-[#173124]"}`} />
+        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 mt-0.5 ${
+          isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
+        }`}>
+          <Lightbulb className="w-5 h-5" />
+        </div>
         <div>
-          <h3 className={`font-bold text-base mb-1 ${isDarkMode ? "text-[#ffffff]" : "text-[#173124]"}`}>
-            A quick tip
+          <h3 className={`font-['Sora',sans-serif] font-bold text-base mb-1 ${
+            isDarkMode ? "text-white" : "text-[#173124]"
+          }`}>
+            Parent Tip
           </h3>
-          <p className={`text-xs leading-relaxed ${isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"}`}>
-            Remember to keep portions small and introduce one new food at a time to monitor for any sensitivities.
+          <p className={`font-['Manrope',sans-serif] text-xs sm:text-sm font-medium leading-relaxed ${
+            isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"
+          }`}>
+            Keep portion sizes modest and introduce single foods gradually to monitor taste preferences and tolerance.
           </p>
         </div>
       </div>

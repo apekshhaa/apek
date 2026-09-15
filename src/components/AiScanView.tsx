@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavTab, ChildProfile, VitalRecord } from "../types";
 import { Volume2, Camera, RefreshCw, X, CheckCircle2, Utensils } from "lucide-react";
+import { AnimatedCounter } from "./AnimatedCounter";
+import { RetroButton } from "./RetroButton";
 
 interface AiScanViewProps {
   child: ChildProfile;
@@ -73,23 +75,27 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
   };
 
   return (
-    <div className="flex flex-col w-full relative pt-16 pb-32 min-h-screen px-4 max-w-lg mx-auto">
+    <div className="flex flex-col w-full relative pt-4 pb-28 min-h-[calc(100vh-80px)] px-5 max-w-lg mx-auto gap-5">
       {/* 1. CAMERA SCAN FRAME MODE */}
       {scanMode === "camera" && (
-        <div className="flex flex-col items-center justify-between min-h-[calc(100vh-140px)] animate-fade-in relative z-10">
+        <div className="flex flex-col items-center justify-between w-full relative z-10 gap-4">
           {/* Top Instruction */}
-          <div className="text-center pt-3">
-            <h2 className={`text-2xl font-bold ${isDarkMode ? "text-[#ffffff]" : "text-[#1b1c1a]"}`}>
-              Let's check in on their growth
-            </h2>
-            <p className={`text-sm mt-1 ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>
-              Position {child.name} inside the gentle frame below.
+          <div className="flex flex-col items-center text-center w-full">
+            <h1 className={`font-['Sora',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight leading-tight ${
+              isDarkMode ? "text-white" : "text-[#173124]"
+            }`}>
+              AI Growth Scan
+            </h1>
+            <p className={`font-['Manrope',sans-serif] text-sm sm:text-base font-medium tracking-normal mt-1 ${
+              isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+            }`}>
+              Position {child.name} inside the guide frame below.
             </p>
           </div>
 
-          {/* Positioning Guide */}
-          <div className={`relative w-full max-w-[300px] h-[380px] my-6 flex items-center justify-center rounded-3xl overflow-hidden shadow-inner border transition-colors ${
-            isDarkMode ? "bg-[#14231b] border-[#3fff80]/40" : "bg-[#efeeea] border-[#cceacc]"
+          {/* Positioning Guide Viewport */}
+          <div className={`relative w-full max-w-[320px] h-[360px] my-2 flex items-center justify-center rounded-3xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.04)] border transition-all ${
+            isDarkMode ? "bg-[#14231b] border-[#3fff80]/40" : "bg-white/80 border-[#e3e2df]"
           }`}>
             <video
               ref={videoRef}
@@ -104,8 +110,8 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
 
             {/* Silhouette Outline */}
             <svg
-              className={`w-full h-[320px] drop-shadow-md opacity-85 z-10 animate-pulse ${
-                isDarkMode ? "text-[#3fff80]" : "text-[#2d4739]"
+              className={`w-full h-[300px] drop-shadow-md opacity-85 z-10 animate-pulse ${
+                isDarkMode ? "text-[#3fff80]" : "text-[#173124]"
               }`}
               viewBox="0 0 200 400"
               fill="none"
@@ -156,14 +162,14 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
             </svg>
 
             {/* Corner Brackets */}
-            <div className={`absolute top-4 left-4 w-7 h-7 border-t-3 border-l-3 rounded-tl-lg ${isDarkMode ? "border-[#3fff80]" : "border-[#173124]"}`} />
-            <div className={`absolute top-4 right-4 w-7 h-7 border-t-3 border-r-3 rounded-tr-lg ${isDarkMode ? "border-[#3fff80]" : "border-[#173124]"}`} />
-            <div className={`absolute bottom-4 left-4 w-7 h-7 border-b-3 border-l-3 rounded-bl-lg ${isDarkMode ? "border-[#3fff80]" : "border-[#173124]"}`} />
-            <div className={`absolute bottom-4 right-4 w-7 h-7 border-b-3 border-r-3 rounded-br-lg ${isDarkMode ? "border-[#3fff80]" : "border-[#173124]"}`} />
+            <div className={`absolute top-4 left-4 w-7 h-7 border-t-3 border-l-3 rounded-tl-xl ${isDarkMode ? "border-[#3fff80]" : "border-[#173124]"}`} />
+            <div className={`absolute top-4 right-4 w-7 h-7 border-t-3 border-r-3 rounded-tr-xl ${isDarkMode ? "border-[#3fff80]" : "border-[#173124]"}`} />
+            <div className={`absolute bottom-4 left-4 w-7 h-7 border-b-3 border-l-3 rounded-bl-xl ${isDarkMode ? "border-[#3fff80]" : "border-[#173124]"}`} />
+            <div className={`absolute bottom-4 right-4 w-7 h-7 border-b-3 border-r-3 rounded-br-xl ${isDarkMode ? "border-[#3fff80]" : "border-[#173124]"}`} />
           </div>
 
           {/* Controls */}
-          <div className="flex flex-col items-center gap-4 w-full pb-6">
+          <div className="flex flex-col items-center gap-4 w-full">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => {
@@ -171,35 +177,35 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
                   setIsDistractingSoundsOn(nextState);
                   if (nextState) playSoothingSound();
                 }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full shadow-xs active:scale-95 transition-all border ${
+                className={`flex items-center gap-2.5 px-4 py-2 rounded-full shadow-xs active:scale-95 transition-all border ${
                   isDarkMode
-                    ? "bg-[#14231b] border-[#22392b] text-[#ffffff]"
-                    : "bg-[#e9e8e4] border-[#e3e2df] text-[#424844]"
+                    ? "bg-[#14231b] border-[#22392b] text-white"
+                    : "bg-white border-[#e3e2df] text-[#424844]"
                 }`}
               >
-                <Volume2 className={`w-4 h-4 ${isDarkMode ? "text-[#3fff80]" : "text-[#4f6951]"}`} />
-                <span className="text-xs font-semibold">Distract with sounds</span>
+                <Volume2 className={`w-4 h-4 ${isDarkMode ? "text-[#3fff80]" : "text-[#173124]"}`} />
+                <span className="font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-wider">Sounds</span>
                 <span
-                  className={`w-9 h-5 rounded-full p-0.5 transition-colors ${
+                  className={`w-8 h-4.5 rounded-full p-0.5 transition-colors ${
                     isDistractingSoundsOn
                       ? isDarkMode ? "bg-[#3fff80]" : "bg-[#173124]"
-                      : "bg-[#bfc9bf]"
+                      : "bg-[#d1d5db]"
                   }`}
                 >
                   <div
-                    className={`w-4 h-4 rounded-full transition-transform ${
+                    className={`w-3.5 h-3.5 rounded-full transition-transform ${
                       isDarkMode ? "bg-[#0a120e]" : "bg-white"
-                    } ${isDistractingSoundsOn ? "translate-x-4" : "translate-x-0"}`}
+                    } ${isDistractingSoundsOn ? "translate-x-3.5" : "translate-x-0"}`}
                   />
                 </span>
               </button>
 
               <button
                 onClick={() => setScanMode("distraction")}
-                className={`text-xs font-bold px-3 py-2 rounded-full shadow-xs transition-all ${
+                className={`font-['Manrope',sans-serif] text-xs font-bold px-4 py-2.5 rounded-full shadow-xs active:scale-95 transition-all border ${
                   isDarkMode
-                    ? "bg-[#3fff80] text-[#0a120e] hover:bg-[#34e06e]"
-                    : "bg-[#cae8c9] text-[#07200e] hover:bg-[#b1ceb1]"
+                    ? "bg-[#3fff80] text-[#0a120e] border-[#3fff80]"
+                    : "bg-[#cae8c9] text-[#173124] border-transparent"
                 }`}
               >
                 Mascot Mode
@@ -207,8 +213,8 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
             </div>
 
             {/* Shutter Button */}
-            <div className="relative mt-2">
-              <div className={`absolute inset-0 rounded-full blur-lg animate-pulse ${
+            <div className="relative mt-1">
+              <div className={`absolute inset-0 rounded-full blur-md animate-pulse ${
                 isDarkMode ? "bg-[#3fff80]/30" : "bg-[#173124]/20"
               }`} />
               <button
@@ -233,24 +239,34 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
 
       {/* 2. DISTRACTION MODE */}
       {scanMode === "distraction" && (
-        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-140px)] animate-fade-in relative">
-          <div className="text-center mb-8">
-            <h1 className={`text-3xl font-extrabold tracking-tight mb-1 ${
+        <div className="flex flex-col items-center justify-center w-full py-8 text-center gap-6">
+          <div className="flex flex-col items-center">
+            <span className={`font-['Space_Grotesk',sans-serif] text-[12px] font-semibold uppercase tracking-[2px] mb-2 ${
               isDarkMode ? "text-[#3fff80]" : "text-[#173124]"
             }`}>
-              DISTRACTION MODE ON
-            </h1>
-            <p className={`text-lg ${isDarkMode ? "text-[#ffffff]" : "text-[#424844]"}`}>
+              Interactive Mode
+            </span>
+            <h1 className={`font-['Sora',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight ${
+              isDarkMode ? "text-white" : "text-[#173124]"
+            }`}>
               Look here, {child.name}!
+            </h1>
+            <p className={`font-['Manrope',sans-serif] text-sm font-medium mt-1 ${
+              isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+            }`}>
+              Tap the bird mascot to play cheerful chimes.
             </p>
           </div>
 
           <div
             onClick={playSoothingSound}
-            className="relative w-64 h-64 mb-8 flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95 transition-transform"
+            className="relative w-56 h-56 flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95 transition-transform my-2"
           >
+            <div className={`absolute inset-0 rounded-full blur-xl opacity-40 ${
+              isDarkMode ? "bg-[#3fff80]" : "bg-[#cae8c9]"
+            }`} />
             <svg
-              className="w-full h-full drop-shadow-lg"
+              className="w-full h-full drop-shadow-lg relative z-10"
               viewBox="0 0 200 200"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -258,27 +274,23 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
                 d="M40 100 C40 40 160 40 160 100 C160 160 40 160 40 100 Z"
                 fill={isDarkMode ? "#3fff80" : "#cae8c9"}
               />
-              <circle cx="80" cy="90" r="8" fill="#062014" />
-              <circle cx="120" cy="90" r="8" fill="#062014" />
-              <polygon points="90,105 110,105 100,120" fill="#4a654d" />
-              <path d="M30 90 Q10 110 30 130 Q50 110 30 90 Z" fill="#b0cdbb" />
-              <path d="M170 90 Q190 110 170 130 Q150 110 170 90 Z" fill="#b0cdbb" />
+              <circle cx="80" cy="90" r="8" fill="#173124" />
+              <circle cx="120" cy="90" r="8" fill="#173124" />
+              <polygon points="90,105 110,105 100,120" fill="#2d4739" />
+              <path d="M30 90 Q10 110 30 130 Q50 110 30 90 Z" fill="#2d4739" opacity="0.6" />
+              <path d="M170 90 Q190 110 170 130 Q150 110 170 90 Z" fill="#2d4739" opacity="0.6" />
             </svg>
           </div>
 
-          <p className={`text-xs mb-6 ${isDarkMode ? "text-[#b0c4b5]" : "text-[#727973]"}`}>
-            Tap the bird for a cheerful chime!
-          </p>
-
           <button
             onClick={() => setScanMode("camera")}
-            className={`font-semibold text-sm px-6 py-3 rounded-full flex items-center gap-2 transition-colors shadow-xs border ${
+            className={`font-['Manrope',sans-serif] text-sm font-bold px-6 py-3 rounded-full flex items-center gap-2 border transition-all active:scale-95 ${
               isDarkMode
-                ? "bg-[#14231b] border-[#22392b] text-[#ffffff] hover:bg-[#1f3829]"
-                : "bg-[#e9e8e4] border-[#e3e2df] text-[#424844] hover:bg-[#e3e2df]"
+                ? "bg-[#14231b] border-[#22392b] text-white hover:bg-[#1f3829]"
+                : "bg-white border-[#e3e2df] text-[#173124] hover:bg-[#efeeea]"
             }`}
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
             Exit Distraction Mode
           </button>
         </div>
@@ -286,96 +298,125 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
 
       {/* 3. SCAN RESULT MODE */}
       {scanMode === "result" && (
-        <div className="flex flex-col w-full relative pt-2 animate-fade-in">
-          <div className="flex justify-center mb-4">
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center shadow-xs ${
-              isDarkMode ? "bg-[#3fff80] text-[#0a120e]" : "bg-[#cae8c9] text-[#07200e]"
+        <div className="flex flex-col w-full gap-5 animate-fade-in">
+          <div className="flex flex-col items-center text-center">
+            <div className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-sm mb-3 ${
+              isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
             }`}>
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-          </div>
-
-          <h1 className={`text-2xl font-bold text-center mb-1 ${isDarkMode ? "text-[#ffffff]" : "text-[#1b1c1a]"}`}>
-            {child.name} is growing normally
-          </h1>
-          <p className={`text-sm text-center mb-6 ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>
-            Last checked today at 10:42 AM
-          </p>
-
-          <div className={`rounded-2xl p-5 mb-6 flex flex-col gap-4 border ${
-            isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-[#f4f4f0] border-[#e3e2df]"
-          }`}>
-            <h2 className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-[#3fff80]" : "text-[#727973]"}`}>
-              LATEST MEASUREMENTS
-            </h2>
-
-            <div className="flex justify-between items-end">
-              <div className="flex flex-col">
-                <span className={`text-xs mb-0.5 ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>Weight</span>
-                <span className={`text-2xl font-bold ${isDarkMode ? "text-[#ffffff]" : "text-[#1b1c1a]"}`}>
-                  14.2 <span className={`text-sm font-normal ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>kg</span>
-                </span>
-              </div>
+              <CheckCircle2 className="w-9 h-9" />
             </div>
 
-            <div className={`w-full h-px ${isDarkMode ? "bg-[#22392b]" : "bg-[#c2c8c2]/40"}`} />
-
-            <div className="flex justify-between items-end">
-              <div className="flex flex-col">
-                <span className={`text-xs mb-0.5 ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>Height</span>
-                <span className={`text-2xl font-bold ${isDarkMode ? "text-[#ffffff]" : "text-[#1b1c1a]"}`}>
-                  94.5 <span className={`text-sm font-normal ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>cm</span>
-                </span>
-              </div>
-            </div>
-
-            <div className={`w-full h-px ${isDarkMode ? "bg-[#22392b]" : "bg-[#c2c8c2]/40"}`} />
-
-            <div className="flex justify-between items-end">
-              <div className="flex flex-col">
-                <span className={`text-xs mb-0.5 ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>MUAC</span>
-                <span className={`text-2xl font-bold ${isDarkMode ? "text-[#ffffff]" : "text-[#1b1c1a]"}`}>
-                  15.0 <span className={`text-sm font-normal ${isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"}`}>cm</span>
-                </span>
-              </div>
-              <div className={`px-3 py-1 rounded-full flex items-center gap-1.5 ${
-                isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#4f6951]"
-              }`}>
-                <div className={`w-2 h-2 rounded-full ${isDarkMode ? "bg-[#3fff80]" : "bg-[#4a654d]"}`} />
-                <span className="text-xs font-semibold">Healthy</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2 mb-8">
-            <h3 className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? "text-[#3fff80]" : "text-[#727973]"}`}>
-              WHAT THIS MEANS
-            </h3>
-            <p className={`text-base leading-relaxed ${isDarkMode ? "text-[#ffffff]" : "text-[#1b1c1a]"}`}>
-              {child.name} is right on track. Weight and height are perfectly balanced, and arm circumference shows good nutrition intake!
+            <h1 className={`font-['Sora',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight ${
+              isDarkMode ? "text-white" : "text-[#173124]"
+            }`}>
+              {child.name} is growing normally
+            </h1>
+            <p className={`font-['Manrope',sans-serif] text-sm font-medium mt-1 ${
+              isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+            }`}>
+              Scan completed today at 10:42 AM
             </p>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <button
+          <div className={`rounded-3xl p-6 flex flex-col gap-4 border shadow-[0_4px_20px_rgba(0,0,0,0.03)] ${
+            isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
+          }`}>
+            <span className={`font-['Space_Grotesk',sans-serif] text-[12px] font-semibold uppercase tracking-[1.75px] ${
+              isDarkMode ? "text-[#3fff80]" : "text-[#173124]"
+            }`}>
+              Latest Measurements
+            </span>
+
+            <div className="flex justify-between items-center">
+              <span className={`font-['Manrope',sans-serif] text-sm font-medium ${
+                isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+              }`}>Weight</span>
+              <div className="flex items-baseline gap-1">
+                <span className={`font-['Sora',sans-serif] text-2xl font-bold ${
+                  isDarkMode ? "text-white" : "text-[#173124]"
+                }`}>
+                  <AnimatedCounter value={14.2} duration={1} decimals={1} startAnimation={true} />
+                </span>
+                <span className={`font-['Manrope',sans-serif] text-sm font-semibold ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                }`}>kg</span>
+              </div>
+            </div>
+
+            <div className={`w-full h-px ${isDarkMode ? "bg-[#22392b]" : "bg-[#efeeea]"}`} />
+
+            <div className="flex justify-between items-center">
+              <span className={`font-['Manrope',sans-serif] text-sm font-medium ${
+                isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+              }`}>Height</span>
+              <div className="flex items-baseline gap-1">
+                <span className={`font-['Sora',sans-serif] text-2xl font-bold ${
+                  isDarkMode ? "text-white" : "text-[#173124]"
+                }`}>
+                  <AnimatedCounter value={94.5} duration={1} decimals={1} startAnimation={true} />
+                </span>
+                <span className={`font-['Manrope',sans-serif] text-sm font-semibold ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                }`}>cm</span>
+              </div>
+            </div>
+
+            <div className={`w-full h-px ${isDarkMode ? "bg-[#22392b]" : "bg-[#efeeea]"}`} />
+
+            <div className="flex justify-between items-center">
+              <span className={`font-['Manrope',sans-serif] text-sm font-medium ${
+                isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+              }`}>MUAC</span>
+              <div className="flex items-center gap-3">
+                <div className="flex items-baseline gap-1">
+                  <span className={`font-['Sora',sans-serif] text-2xl font-bold ${
+                    isDarkMode ? "text-white" : "text-[#173124]"
+                  }`}>
+                    <AnimatedCounter value={15.0} duration={1} decimals={1} startAnimation={true} />
+                  </span>
+                  <span className={`font-['Manrope',sans-serif] text-sm font-semibold ${
+                    isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                  }`}>cm</span>
+                </div>
+                <span className={`font-['Space_Grotesk',sans-serif] text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full ${
+                  isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
+                }`}>
+                  Healthy
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className={`p-6 rounded-3xl border flex flex-col gap-2 shadow-[0_4px_20px_rgba(0,0,0,0.03)] ${
+            isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
+          }`}>
+            <span className={`font-['Space_Grotesk',sans-serif] text-[12px] font-semibold uppercase tracking-[1.75px] ${
+              isDarkMode ? "text-[#3fff80]" : "text-[#173124]"
+            }`}>
+              Analysis Insights
+            </span>
+            <p className={`font-['Manrope',sans-serif] text-sm sm:text-base font-medium leading-relaxed ${
+              isDarkMode ? "text-[#e5e7eb]" : "text-[#1b1c1a]"
+            }`}>
+              {child.name} is tracking perfectly on standard WHO percentile growth curves. Weight and height are well-proportioned, and upper-arm circumference reflects robust nutritional health.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 mt-1">
+            <RetroButton
               onClick={() => onNavigate("nutrition-plan")}
-              className={`w-full font-bold py-4 rounded-full flex items-center justify-center gap-2 active:scale-98 transition-all ${
-                isDarkMode ? "bg-[#3fff80] text-[#0a120e] hover:bg-[#34e06e]" : "bg-[#173124] text-white hover:bg-[#2d4739]"
-              }`}
+              variant="green"
+              icon={<Utensils className="w-5 h-5" />}
             >
-              <Utensils className="w-5 h-5" />
-              View nutrition plan
-            </button>
-            <button
+              View Nutrition Plan
+            </RetroButton>
+            <RetroButton
               onClick={() => setScanMode("camera")}
-              className={`w-full border-2 font-bold py-3.5 rounded-full flex items-center justify-center gap-2 transition-all ${
-                isDarkMode
-                  ? "border-[#3fff80] text-[#3fff80] hover:bg-[#3fff80]/10"
-                  : "border-[#173124] text-[#173124] hover:bg-[#173124]/5"
-              }`}
+              variant="greenBorder"
+              icon={<Camera className="w-5 h-5" />}
             >
-              Scan again
-            </button>
+              Scan Again
+            </RetroButton>
           </div>
         </div>
       )}
