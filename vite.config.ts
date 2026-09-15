@@ -8,7 +8,8 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@bklitui/ui/charts': path.resolve(__dirname, './src/components/charts'),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     server: {

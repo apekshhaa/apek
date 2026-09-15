@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 @layer base {
   body {
     overscroll-behavior: none;
@@ -11,6 +13,14 @@
   .pt-safe {
     padding-top: env(safe-area-inset-top, 16px);
   }
+}
+
+.font-baloo2 {
+  font-family: 'Baloo 2', cursive, sans-serif !important;
+}
+
+.font-caveat {
+  font-family: 'Caveat', cursive, sans-serif !important;
 }
 
 .living-bg {
@@ -36,4 +46,91 @@
 
 .animate-pulse-medium {
   animation: pulse-medium 2.5s ease-in-out infinite;
+}
+
+:root {
+  --chart-1: #173124;
+  --chart-2: #6e8c75;
+  --chart-3: #2d4739;
+  --chart-4: #cae8c9;
+  --chart-5: #a8b8ac;
+  --chart-background: #ffffff;
+  --chart-foreground: #173124;
+  --chart-foreground-muted: #59625a;
+  --chart-line-primary: #173124;
+  --chart-line-secondary: #6e8c75;
+  --chart-crosshair: #173124;
+  --chart-grid: rgba(23, 49, 36, 0.08);
+  --chart-brush-border: rgba(23, 49, 36, 0.15);
+  --chart-tooltip-background: rgba(23, 49, 36, 0.95);
+  --chart-tooltip-foreground: #ffffff;
+  --chart-tooltip-muted: #cae8c9;
+  --chart-marker-background: #ffffff;
+  --chart-marker-border: #173124;
+  --chart-marker-foreground: #173124;
+  --chart-label: #59625a;
+  --chart-scale-01: #f4f6f4;
+  --chart-scale-02: #cae8c9;
+  --chart-scale-03: #89b392;
+  --chart-scale-04: #3e684a;
+  --chart-scale-05: #173124;
+  --chart-scale-pattern-color: rgba(23, 49, 36, 0.05);
+}
+
+.dark {
+  --chart-1: #3fff80;
+  --chart-2: #a8b8ac;
+  --chart-3: #22392b;
+  --chart-4: #1f3829;
+  --chart-5: #14231b;
+  --chart-background: #14231b;
+  --chart-foreground: #ffffff;
+  --chart-foreground-muted: #b0c4b5;
+  --chart-line-primary: #3fff80;
+  --chart-line-secondary: #a8b8ac;
+  --chart-crosshair: #3fff80;
+  --chart-grid: rgba(255, 255, 255, 0.08);
+  --chart-brush-border: rgba(255, 255, 255, 0.15);
+  --chart-tooltip-background: rgba(20, 35, 27, 0.95);
+  --chart-tooltip-foreground: #ffffff;
+  --chart-tooltip-muted: #b0c4b5;
+  --chart-marker-background: #14231b;
+  --chart-marker-border: #3fff80;
+  --chart-marker-foreground: #3fff80;
+  --chart-label: #b0c4b5;
+  --chart-scale-01: #1f3829;
+  --chart-scale-02: #22392b;
+  --chart-scale-03: #2d4739;
+  --chart-scale-04: #3fff80;
+  --chart-scale-05: #3fff80;
+  --chart-scale-pattern-color: rgba(63, 255, 128, 0.05);
+}
+
+@theme inline {
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-background: var(--chart-background);
+  --color-chart-foreground: var(--chart-foreground);
+  --color-chart-foreground-muted: var(--chart-foreground-muted);
+  --chart-line-primary: var(--chart-line-primary);
+  --chart-line-secondary: var(--chart-line-secondary);
+  --color-chart-crosshair: var(--chart-crosshair);
+  --color-chart-grid: var(--chart-grid);
+  --chart-brush-border: var(--chart-brush-border);
+  --color-chart-tooltip-background: var(--chart-tooltip-background);
+  --color-chart-tooltip-foreground: var(--chart-tooltip-foreground);
+  --color-chart-tooltip-muted: var(--chart-tooltip-muted);
+  --color-chart-marker-background: var(--chart-marker-background);
+  --color-chart-marker-border: var(--chart-marker-border);
+  --color-chart-marker-foreground: var(--chart-marker-foreground);
+  --color-chart-label: var(--chart-label);
+  --color-chart-scale-01: var(--chart-scale-01);
+  --color-chart-scale-02: var(--chart-scale-02);
+  --color-chart-scale-03: var(--chart-scale-03);
+  --color-chart-scale-04: var(--chart-scale-04);
+  --color-chart-scale-05: var(--chart-scale-05);
+  --color-chart-scale-pattern-color: var(--chart-scale-pattern-color);
 }

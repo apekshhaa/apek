@@ -1,6 +1,7 @@
 import React from "react";
 import { NavTab } from "../types";
-import { ArrowLeft, User, Sun, Moon } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
+import { FramerThemeSwitch } from "./FramerThemeSwitch";
 
 interface HeaderProps {
   title: string;
@@ -67,22 +68,12 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right side buttons: Dark Mode Toggle & Profile Avatar */}
         <div className="flex items-center gap-2.5">
-          <button
-            onClick={onToggleTheme}
-            className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all active:scale-95 ${
-              isDarkMode
-                ? "bg-[#18261e] border-[#293d31] text-[#3fff80] hover:bg-[#23362b]"
-                : "bg-[#efeeea] border-[#e3e2df] text-[#173124] hover:bg-[#e3e2df]"
-            }`}
-            title={isDarkMode ? "Switch to Light Theme" : "Switch to Dark Theme"}
-            aria-label="Toggle Theme"
-          >
-            {isDarkMode ? (
-              <Sun className="w-4 h-4 text-[#3fff80]" />
-            ) : (
-              <Moon className="w-4 h-4 text-[#173124]" />
-            )}
-          </button>
+          {onToggleTheme && (
+            <FramerThemeSwitch
+              isDarkMode={isDarkMode}
+              onToggleTheme={onToggleTheme}
+            />
+          )}
 
           <button
             onClick={onProfileClick}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { NavTab, ChildProfile, VitalRecord } from "./types";
-import { LivingBackgroundShader } from "./components/LivingBackgroundShader";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
 import { HomeView } from "./components/HomeView";
@@ -78,9 +77,6 @@ export default function App() {
           : "bg-[#faf9f5] text-[#1b1c1a] selection:bg-[#cae8c9]"
       }`}
     >
-      {/* Animated Flowing Green Line Ribbon Background */}
-      <LivingBackgroundShader opacity={0.95} isDarkMode={isDarkMode} />
-
       {/* Persistent Header */}
       <Header
         title={getPageTitle()}

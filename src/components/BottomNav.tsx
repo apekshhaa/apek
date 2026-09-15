@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { NavTab } from "../types";
 import { Home, TrendingUp, Scan, Utensils, User } from "lucide-react";
+import MagneticDock, { DockItem } from "./MagneticDock";
 
 interface BottomNavProps {
   activeTab: NavTab;
@@ -9,80 +10,55 @@ interface BottomNavProps {
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, isDarkMode = false }) => {
+  // Memoize so icon JSX identity stays stable across parent re-renders.
+  // Only recreates if isDarkMode changes (which is infrequent).
+  const dockItems: DockItem[] = useMemo(() => [
+    {
+      id: "home",
+      label: "Home",
+      icon: <Home className="w-5 h-5" />,
+      tint: isDarkMode ? ["#294a36", "#14231b"] : ["#173124", "#2d4739"] as [string, string],
+    },
+    {
+      id: "growth-tracking",
+      label: "Growth",
+      icon: <TrendingUp className="w-5 h-5" />,
+      tint: isDarkMode ? ["#1a4959", "#14231b"] : ["#0f4c47", "#173124"] as [string, string],
+    },
+    {
+      id: "ai-scan",
+      label: "AI Scan",
+      icon: <Scan className="w-6 h-6" />,
+      tint: ["#3fff80", "#22c7d9"] as [string, string],
+    },
+    {
+      id: "nutrition-plan",
+      label: "Nutrition",
+      icon: <Utensils className="w-5 h-5" />,
+      tint: isDarkMode ? ["#5c431d", "#14231b"] : ["#4d3916", "#173124"] as [string, string],
+    },
+    {
+      id: "child-profile",
+      label: "Profile",
+      icon: <User className="w-5 h-5" />,
+      tint: isDarkMode ? ["#243c66", "#14231b"] : ["#1a2a40", "#173124"] as [string, string],
+    },
+  ], [isDarkMode]);
+
   return (
-    <nav className={`fixed bottom-0 left-0 w-full z-50 pb-safe backdrop-blur-xl border-t transition-colors shadow-lg ${
-      isDarkMode
-        ? "bg-[#0a120e]/90 border-[#1d2d23]"
-        : "bg-[#faf9f5]/80 border-[#e3e2df]/60"
-    }`}>
-      <div className="flex items-center justify-between h-20 px-4 max-w-lg mx-auto">
-        {/* Home */}
-        <button
-          onClick={() => onTabChange("home")}
-          className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-            activeTab === "home"
-              ? isDarkMode ? "text-[#3fff80] font-bold" : "text-[#173124] font-bold"
-              : isDarkMode ? "text-[#b0c4b5] hover:text-[#ffffff]" : "text-[#727973] hover:text-[#173124]"
-          }`}
-        >
-          <Home className="w-5 h-5" />
-          <span className="text-xs mt-1">Home</span>
-        </button>
-
-        {/* Growth */}
-        <button
-          onClick={() => onTabChange("growth-tracking")}
-          className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-            activeTab === "growth-tracking"
-              ? isDarkMode ? "text-[#3fff80] font-bold" : "text-[#173124] font-bold"
-              : isDarkMode ? "text-[#b0c4b5] hover:text-[#ffffff]" : "text-[#727973] hover:text-[#173124]"
-          }`}
-        >
-          <TrendingUp className="w-5 h-5" />
-          <span className="text-xs mt-1">Growth</span>
-        </button>
-
-        {/* Center AI Scan FAB */}
-        <div className="flex-1 flex justify-center -mt-8">
-          <button
-            onClick={() => onTabChange("ai-scan")}
-            className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 ring-4 ${
-              isDarkMode
-                ? "bg-[#3fff80] text-[#0a120e] ring-[#0a120e]"
-                : "bg-[#173124] text-white ring-[#faf9f5]"
-            }`}
-            aria-label="Start AI Scan"
-          >
-            <Scan className="w-7 h-7" />
-          </button>
-        </div>
-
-        {/* Nutrition */}
-        <button
-          onClick={() => onTabChange("nutrition-plan")}
-          className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-            activeTab === "nutrition-plan"
-              ? isDarkMode ? "text-[#3fff80] font-bold" : "text-[#173124] font-bold"
-              : isDarkMode ? "text-[#b0c4b5] hover:text-[#ffffff]" : "text-[#727973] hover:text-[#173124]"
-          }`}
-        >
-          <Utensils className="w-5 h-5" />
-          <span className="text-xs mt-1">Nutrition</span>
-        </button>
-
-        {/* Profile */}
-        <button
-          onClick={() => onTabChange("child-profile")}
-          className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-            activeTab === "child-profile"
-              ? isDarkMode ? "text-[#3fff80] font-bold" : "text-[#173124] font-bold"
-              : isDarkMode ? "text-[#b0c4b5] hover:text-[#ffffff]" : "text-[#727973] hover:text-[#173124]"
-          }`}
-        >
-          <User className="w-5 h-5" />
-          <span className="text-xs mt-1">Profile</span>
-        </button>
+    <div className="fixed bottom-0 left-0 w-full z-50">
+      <div className="max-w-lg mx-auto">
+        <MagneticDock
+          items={dockItems}
+          activeId={activeTab}
+          onSelect={(id) => onTabChange(id as NavTab)}
+          idleWave={false}
+          tooltip={true}
+          lift={22}
+          maxScale={1.45}
+          pauseWhenHidden={false}
+        />
       </div>
-    </nav>
+    </div>
   );
 };

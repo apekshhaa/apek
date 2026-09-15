@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { ChildProfile, VitalRecord } from "../types";
 import { Scale, Ruler, Plus, RefreshCw, ArrowRight, TrendingUp, CheckCircle2 } from "lucide-react";
 import { GrowthChart } from "./GrowthChart";
+import { OrbitStatusIndicator } from "./OrbitStatusIndicator";
+import { AnimatedCounter } from "./AnimatedCounter";
+import { RetroButton } from "./RetroButton";
 
 interface GrowthViewProps {
   child: ChildProfile;
@@ -80,35 +83,49 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full relative pt-20 pb-32 px-5 max-w-lg mx-auto">
+    <div className="flex flex-col w-full relative pt-4 pb-28 px-5 max-w-lg mx-auto gap-5">
+      {/* Header Title Section */}
+      <div className="flex flex-col items-start w-full">
+        <h1 className={`font-['Sora',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight leading-tight ${
+          isDarkMode ? "text-white" : "text-[#173124]"
+        }`}>
+          Growth Tracking
+        </h1>
+        <p className={`font-['Manrope',sans-serif] text-sm sm:text-base font-medium tracking-normal mt-1 ${
+          isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+        }`}>
+          Monitor {child.name}'s development milestones.
+        </p>
+      </div>
+
       {/* View Switcher Tabs */}
-      <div className={`flex p-1 rounded-full mb-6 relative border transition-colors ${
-        isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-[#e3e2df] border-[#d1d0cb]"
+      <div className={`flex p-1 rounded-2xl relative border transition-all ${
+        isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-[#efeeea] border-[#e3e2df]"
       }`}>
         <button
           onClick={() => setActiveSubTab("dashboard")}
-          className={`flex-1 py-2.5 text-sm font-semibold rounded-full transition-all ${
+          className={`flex-1 py-2.5 font-['Space_Grotesk',sans-serif] text-[12.5px] font-semibold uppercase tracking-[1.5px] rounded-xl transition-all ${
             activeSubTab === "dashboard"
               ? isDarkMode
-                ? "bg-[#1f3829] text-[#3fff80] shadow-xs"
-                : "bg-[#faf9f5] text-[#173124] shadow-xs"
+                ? "bg-[#1f3829] text-[#3fff80] shadow-sm"
+                : "bg-white text-[#173124] shadow-sm"
               : isDarkMode
-              ? "text-[#a2b5a7] hover:text-[#f1f5f2]"
-              : "text-[#424844] hover:text-[#173124]"
+              ? "text-[#b0c4b5] hover:text-white"
+              : "text-[#59625a] hover:text-[#173124]"
           }`}
         >
           Growth Trends
         </button>
         <button
           onClick={() => setActiveSubTab("calculator")}
-          className={`flex-1 py-2.5 text-sm font-semibold rounded-full transition-all ${
+          className={`flex-1 py-2.5 font-['Space_Grotesk',sans-serif] text-[12.5px] font-semibold uppercase tracking-[1.5px] rounded-xl transition-all ${
             activeSubTab === "calculator"
               ? isDarkMode
-                ? "bg-[#1f3829] text-[#3fff80] shadow-xs"
-                : "bg-[#faf9f5] text-[#173124] shadow-xs"
+                ? "bg-[#1f3829] text-[#3fff80] shadow-sm"
+                : "bg-white text-[#173124] shadow-sm"
               : isDarkMode
-              ? "text-[#a2b5a7] hover:text-[#f1f5f2]"
-              : "text-[#424844] hover:text-[#173124]"
+              ? "text-[#b0c4b5] hover:text-white"
+              : "text-[#59625a] hover:text-[#173124]"
           }`}
         >
           Calculator
@@ -116,53 +133,96 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
       </div>
 
       {activeSubTab === "dashboard" ? (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           {/* Status Header Card */}
-          <div className={`rounded-2xl p-5 shadow-sm flex items-center justify-between border ${
-            isDarkMode ? "bg-[#122b1f] border-[#224432] text-[#faf9f5]" : "bg-[#173124] text-[#faf9f5] border-transparent"
+          <div className={`rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-between border transition-all ${
+            isDarkMode ? "bg-[#14231b] border-[#22392b] text-[#f1f5f2]" : "bg-[#173124] text-white border-transparent"
           }`}>
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#3fff80]">
-                Current Status
-              </span>
-              <h3 className="text-xl font-bold mt-1 text-[#ffffff]">On Track</h3>
-              <p className="text-xs text-[#d1d8d3] mt-0.5">WHO Percentile: 75th percentile</p>
+              <div className="flex items-center gap-2 mb-1.5">
+                <OrbitStatusIndicator isDarkMode={isDarkMode} />
+                <span className={`font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-[1.75px] ${
+                  isDarkMode ? "text-[#3fff80]" : "text-[#cae8c9]"
+                }`}>
+                  Current Status
+                </span>
+              </div>
+              <h3 className="font-['Sora',sans-serif] text-2xl font-bold tracking-tight text-white">On Track</h3>
+              <p className={`font-['Manrope',sans-serif] text-xs sm:text-sm font-medium mt-1 ${
+                isDarkMode ? "text-[#d1d8d3]" : "text-[#cae8c9]"
+              }`}>
+                WHO Percentile: {vitals.percentile} percentile
+              </p>
             </div>
-            <div className="p-3 rounded-full bg-[#234433] text-[#3fff80]">
-              <CheckCircle2 className="w-6 h-6" />
+            <div className={`w-13 h-13 rounded-2xl flex items-center justify-center shrink-0 ${
+              isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#2d4739] text-[#3fff80]"
+            }`}>
+              <CheckCircle2 className="w-7 h-7" />
             </div>
           </div>
 
           {/* Key Vitals Summary Grid */}
           <div className="grid grid-cols-2 gap-4">
-            <div className={`p-4 rounded-2xl border transition-colors ${
-              isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white border-[#e3e2df]/60"
+            {/* Weight Card */}
+            <div className={`p-5 rounded-3xl border shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all ${
+              isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
             }`}>
-              <div className="flex items-center gap-2 mb-1">
-                <Scale className={`w-4 h-4 ${isDarkMode ? "text-[#3fff80]" : "text-[#173124]"}`} />
-                <span className={`text-xs font-semibold ${isDarkMode ? "text-[#a2b5a7]" : "text-[#59625a]"}`}>Weight</span>
+              <div className="flex items-center gap-2 mb-2">
+                <div className={`w-7 h-7 rounded-xl flex items-center justify-center ${
+                  isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
+                }`}>
+                  <Scale className="w-4 h-4" />
+                </div>
+                <span className={`font-['Space_Grotesk',sans-serif] text-[12px] font-semibold uppercase tracking-wider ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#59625a]"
+                }`}>
+                  Weight
+                </span>
               </div>
-              <p className={`text-2xl font-extrabold ${isDarkMode ? "text-[#ffffff]" : "text-[#173124]"}`}>
-                {vitals.weight} <span className="text-sm font-normal">kg</span>
-              </p>
-              <span className={`inline-block text-[10px] font-bold mt-1 px-2 py-0.5 rounded-full ${
+              <div className="flex items-baseline gap-1 my-1">
+                <span className={`font-['Sora',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight ${
+                  isDarkMode ? "text-white" : "text-[#173124]"
+                }`}>
+                  <AnimatedCounter value={vitals.weight} duration={1.2} decimals={1} startAnimation={true} />
+                </span>
+                <span className={`font-['Manrope',sans-serif] text-sm font-semibold ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                }`}>kg</span>
+              </div>
+              <span className={`inline-block font-['Space_Grotesk',sans-serif] text-[10.5px] font-semibold uppercase tracking-wider mt-1 px-2.5 py-0.5 rounded-full ${
                 isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
               }`}>
                 {vitals.percentile} Percentile
               </span>
             </div>
 
-            <div className={`p-4 rounded-2xl border transition-colors ${
-              isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white border-[#e3e2df]/60"
+            {/* Height Card */}
+            <div className={`p-5 rounded-3xl border shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all ${
+              isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
             }`}>
-              <div className="flex items-center gap-2 mb-1">
-                <Ruler className={`w-4 h-4 ${isDarkMode ? "text-[#3fff80]" : "text-[#173124]"}`} />
-                <span className={`text-xs font-semibold ${isDarkMode ? "text-[#a2b5a7]" : "text-[#59625a]"}`}>Height</span>
+              <div className="flex items-center gap-2 mb-2">
+                <div className={`w-7 h-7 rounded-xl flex items-center justify-center ${
+                  isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
+                }`}>
+                  <Ruler className="w-4 h-4" />
+                </div>
+                <span className={`font-['Space_Grotesk',sans-serif] text-[12px] font-semibold uppercase tracking-wider ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#59625a]"
+                }`}>
+                  Height
+                </span>
               </div>
-              <p className={`text-2xl font-extrabold ${isDarkMode ? "text-[#ffffff]" : "text-[#173124]"}`}>
-                {vitals.height} <span className="text-sm font-normal">cm</span>
-              </p>
-              <span className={`inline-block text-[10px] font-bold mt-1 px-2 py-0.5 rounded-full ${
+              <div className="flex items-baseline gap-1 my-1">
+                <span className={`font-['Sora',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight ${
+                  isDarkMode ? "text-white" : "text-[#173124]"
+                }`}>
+                  <AnimatedCounter value={vitals.height} duration={1.2} decimals={1} startAnimation={true} />
+                </span>
+                <span className={`font-['Manrope',sans-serif] text-sm font-semibold ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                }`}>cm</span>
+              </div>
+              <span className={`inline-block font-['Space_Grotesk',sans-serif] text-[10.5px] font-semibold uppercase tracking-wider mt-1 px-2.5 py-0.5 rounded-full ${
                 isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
               }`}>
                 WHO Normal Band
@@ -176,13 +236,13 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
               <button
                 key={m}
                 onClick={() => setActiveMetric(m)}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-xl transition-all capitalize border ${
+                className={`flex-1 py-2 font-['Space_Grotesk',sans-serif] text-[12px] font-semibold uppercase tracking-[1.5px] rounded-xl transition-all border ${
                   activeMetric === m
                     ? isDarkMode
                       ? "bg-[#3fff80] text-[#0a120e] border-[#3fff80]"
-                      : "bg-[#173124] text-[#faf9f5] border-[#173124]"
+                      : "bg-[#173124] text-white border-[#173124]"
                     : isDarkMode
-                    ? "bg-[#14231b] text-[#a2b5a7] border-[#22392b] hover:text-[#ffffff]"
+                    ? "bg-[#14231b] text-[#b0c4b5] border-[#22392b] hover:text-white"
                     : "bg-[#efeeea] text-[#59625a] border-[#e3e2df] hover:text-[#173124]"
                 }`}
               >
@@ -191,58 +251,68 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
             ))}
           </div>
 
-          {/* Recharts Curve Graph */}
-          <div className="flex flex-col gap-2">
-            <h3 className={`text-lg font-bold px-1 capitalize ${isDarkMode ? "text-[#ffffff]" : "text-[#1b1c1a]"}`}>
+          {/* Curve Graph */}
+          <div className="flex flex-col gap-2.5">
+            <h3 className={`font-['Sora',sans-serif] text-lg font-bold px-0.5 capitalize ${
+              isDarkMode ? "text-white" : "text-[#173124]"
+            }`}>
               {activeMetric} Progress Curve
             </h3>
             <GrowthChart activeMetric={activeMetric} isDarkMode={isDarkMode} />
           </div>
 
-          {/* CTA */}
-          <div className="flex flex-col items-center mt-2">
-            <p className={`text-sm text-center mb-3 ${isDarkMode ? "text-[#a2b5a7]" : "text-[#424844]"}`}>
-              Want to calculate & log a new measurement?
+          {/* CTA Banner */}
+          <div className={`p-6 rounded-3xl border flex flex-col items-center text-center shadow-[0_4px_20px_rgba(0,0,0,0.03)] ${
+            isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
+          }`}>
+            <p className={`font-['Manrope',sans-serif] text-sm font-medium mb-4 ${
+              isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+            }`}>
+              Want to calculate & log a new measurement for {child.name}?
             </p>
-            <button
+            <RetroButton
               onClick={() => setActiveSubTab("calculator")}
-              className={`text-sm font-semibold py-3 px-6 rounded-full flex items-center gap-2 active:scale-95 transition-all shadow-md ${
-                isDarkMode
-                  ? "bg-[#3fff80] text-[#0a120e] hover:bg-[#34e06e]"
-                  : "bg-[#173124] text-white hover:bg-[#2d4739]"
-              }`}
+              variant="green"
+              icon={<Plus className="w-5 h-5" />}
             >
-              <Plus className="w-4 h-4" />
-              <span>Log New Vitals</span>
-            </button>
+              Log New Vitals
+            </RetroButton>
           </div>
         </div>
       ) : (
         /* Calculator & Form Mode */
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           <section className="flex flex-col gap-1">
-            <h2 className={`text-2xl font-bold tracking-tight ${isDarkMode ? "text-[#ffffff]" : "text-[#173124]"}`}>
-              Check growth against WHO standards
+            <h2 className={`font-['Sora',sans-serif] text-xl sm:text-2xl font-bold tracking-tight ${
+              isDarkMode ? "text-white" : "text-[#173124]"
+            }`}>
+              WHO Growth Calculator
             </h2>
-            <p className={`text-sm ${isDarkMode ? "text-[#a2b5a7]" : "text-[#424844]"}`}>
-              Enter details below to generate percentile estimations.
+            <p className={`font-['Manrope',sans-serif] text-sm font-medium ${
+              isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+            }`}>
+              Enter measurements below to evaluate growth percentile.
             </p>
           </section>
 
           <form onSubmit={handleCalculate} className="flex flex-col gap-4">
             {/* Gender Toggle */}
             <div className="flex flex-col gap-2">
-              <span className={`text-xs font-semibold uppercase tracking-wider ${isDarkMode ? "text-[#a2b5a7]" : "text-[#424844]"}`}>
+              <span className={`font-['Space_Grotesk',sans-serif] text-[12px] font-semibold uppercase tracking-[1.5px] ${
+                isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+              }`}>
                 Gender
               </span>
-              <div className={`flex p-1 rounded-full border ${isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-[#e3e2df] border-[#d1d0cb]"}`}>
+              <div className={`flex p-1 rounded-2xl border ${
+                isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-[#efeeea] border-[#e3e2df]"
+              }`}>
                 <button
                   type="button"
                   onClick={() => setGender("boy")}
-                  className={`flex-1 py-2 text-xs font-semibold rounded-full transition-all ${
+                  className={`flex-1 py-2.5 font-['Manrope',sans-serif] text-xs sm:text-sm font-bold rounded-xl transition-all ${
                     gender === "boy"
-                      ? isDarkMode ? "bg-[#3fff80] text-[#0a120e]" : "bg-white text-[#173124]"
-                      : isDarkMode ? "text-[#a2b5a7]" : "text-[#424844]"
+                      ? isDarkMode ? "bg-[#3fff80] text-[#0a120e]" : "bg-white text-[#173124] shadow-xs"
+                      : isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
                   }`}
                 >
                   Boy
@@ -250,10 +320,10 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setGender("girl")}
-                  className={`flex-1 py-2 text-xs font-semibold rounded-full transition-all ${
+                  className={`flex-1 py-2.5 font-['Manrope',sans-serif] text-xs sm:text-sm font-bold rounded-xl transition-all ${
                     gender === "girl"
-                      ? isDarkMode ? "bg-[#3fff80] text-[#0a120e]" : "bg-white text-[#173124]"
-                      : isDarkMode ? "text-[#a2b5a7]" : "text-[#424844]"
+                      ? isDarkMode ? "bg-[#3fff80] text-[#0a120e]" : "bg-white text-[#173124] shadow-xs"
+                      : isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
                   }`}
                 >
                   Girl
@@ -263,29 +333,37 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
 
             {/* Age Inputs */}
             <div className="flex gap-3">
-              <div className="flex-1 flex flex-col gap-1">
-                <label className={`text-xs font-semibold ${isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"}`}>Age (Years)</label>
+              <div className="flex-1 flex flex-col gap-1.5">
+                <label className={`font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-wider ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                }`}>
+                  Age (Years)
+                </label>
                 <input
                   type="number"
                   value={ageYears}
                   onChange={(e) => setAgeYears(e.target.value === "" ? "" : Number(e.target.value))}
-                  className={`w-full text-base py-2.5 px-3 rounded-xl border focus:outline-none ${
+                  className={`w-full font-['Sora',sans-serif] text-base py-3 px-4 rounded-2xl border transition-all focus:outline-none ${
                     isDarkMode
-                      ? "bg-[#14231b] text-[#ffffff] border-[#22392b] focus:ring-2 focus:ring-[#3fff80]"
-                      : "bg-[#f4f4f0] text-[#1b1c1a] border-[#e3e2df] focus:ring-2 focus:ring-[#173124]"
+                      ? "bg-[#14231b] text-white border-[#22392b] focus:ring-2 focus:ring-[#3fff80]"
+                      : "bg-white text-[#173124] border-[#e3e2df] focus:ring-2 focus:ring-[#173124]"
                   }`}
                 />
               </div>
-              <div className="flex-1 flex flex-col gap-1">
-                <label className={`text-xs font-semibold ${isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"}`}>Months</label>
+              <div className="flex-1 flex flex-col gap-1.5">
+                <label className={`font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-wider ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                }`}>
+                  Months
+                </label>
                 <input
                   type="number"
                   value={ageMonths}
                   onChange={(e) => setAgeMonths(e.target.value === "" ? "" : Number(e.target.value))}
-                  className={`w-full text-base py-2.5 px-3 rounded-xl border focus:outline-none ${
+                  className={`w-full font-['Sora',sans-serif] text-base py-3 px-4 rounded-2xl border transition-all focus:outline-none ${
                     isDarkMode
-                      ? "bg-[#14231b] text-[#ffffff] border-[#22392b] focus:ring-2 focus:ring-[#3fff80]"
-                      : "bg-[#f4f4f0] text-[#1b1c1a] border-[#e3e2df] focus:ring-2 focus:ring-[#173124]"
+                      ? "bg-[#14231b] text-white border-[#22392b] focus:ring-2 focus:ring-[#3fff80]"
+                      : "bg-white text-[#173124] border-[#e3e2df] focus:ring-2 focus:ring-[#173124]"
                   }`}
                 />
               </div>
@@ -293,70 +371,75 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
 
             {/* Weight & Height */}
             <div className="flex gap-3">
-              <div className="flex-1 flex flex-col gap-1">
-                <label className={`text-xs font-semibold ${isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"}`}>Weight (kg)</label>
+              <div className="flex-1 flex flex-col gap-1.5">
+                <label className={`font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-wider ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                }`}>
+                  Weight (kg)
+                </label>
                 <input
                   type="number"
                   step="0.1"
                   value={weightInput}
                   onChange={(e) => setWeightInput(e.target.value)}
-                  className={`w-full text-base py-2.5 px-3 rounded-xl border focus:outline-none ${
+                  className={`w-full font-['Sora',sans-serif] text-base py-3 px-4 rounded-2xl border transition-all focus:outline-none ${
                     isDarkMode
-                      ? "bg-[#14231b] text-[#ffffff] border-[#22392b] focus:ring-2 focus:ring-[#3fff80]"
-                      : "bg-[#f4f4f0] text-[#1b1c1a] border-[#e3e2df] focus:ring-2 focus:ring-[#173124]"
+                      ? "bg-[#14231b] text-white border-[#22392b] focus:ring-2 focus:ring-[#3fff80]"
+                      : "bg-white text-[#173124] border-[#e3e2df] focus:ring-2 focus:ring-[#173124]"
                   }`}
                 />
               </div>
-              <div className="flex-1 flex flex-col gap-1">
-                <label className={`text-xs font-semibold ${isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"}`}>Height (cm)</label>
+              <div className="flex-1 flex flex-col gap-1.5">
+                <label className={`font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-wider ${
+                  isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
+                }`}>
+                  Height (cm)
+                </label>
                 <input
                   type="number"
                   step="0.1"
                   value={heightInput}
                   onChange={(e) => setHeightInput(e.target.value)}
-                  className={`w-full text-base py-2.5 px-3 rounded-xl border focus:outline-none ${
+                  className={`w-full font-['Sora',sans-serif] text-base py-3 px-4 rounded-2xl border transition-all focus:outline-none ${
                     isDarkMode
-                      ? "bg-[#14231b] text-[#ffffff] border-[#22392b] focus:ring-2 focus:ring-[#3fff80]"
-                      : "bg-[#f4f4f0] text-[#1b1c1a] border-[#e3e2df] focus:ring-2 focus:ring-[#173124]"
+                      ? "bg-[#14231b] text-white border-[#22392b] focus:ring-2 focus:ring-[#3fff80]"
+                      : "bg-white text-[#173124] border-[#e3e2df] focus:ring-2 focus:ring-[#173124]"
                   }`}
                 />
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={isCalculating}
-              className={`w-full py-3 mt-2 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
-                isDarkMode
-                  ? "bg-[#3fff80] text-[#0a120e] hover:bg-[#34e06e]"
-                  : "bg-[#173124] text-white hover:bg-[#234433]"
-              }`}
-            >
-              {isCalculating ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Calculating WHO percentile...</span>
-                </>
-              ) : (
-                <>
-                  <span>Calculate & Save Vitals</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
+            <div className="mt-2">
+              <RetroButton
+                type="submit"
+                disabled={isCalculating}
+                variant="green"
+                icon={isCalculating ? <RefreshCw className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
+              >
+                {isCalculating ? "Calculating WHO percentile..." : "Calculate & Save Vitals"}
+              </RetroButton>
+            </div>
           </form>
 
           {calcResult && (
-            <div className={`p-4 rounded-2xl border ${
-              isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white border-[#e3e2df]"
+            <div className={`p-6 rounded-3xl border shadow-[0_4px_20px_rgba(0,0,0,0.03)] ${
+              isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
             }`}>
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className={`w-5 h-5 ${isDarkMode ? "text-[#3fff80]" : "text-[#173124]"}`} />
-                <h4 className={`text-base font-bold ${isDarkMode ? "text-[#ffffff]" : "text-[#173124]"}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
+                }`}>
+                  <TrendingUp className="w-4 h-4" />
+                </div>
+                <h4 className={`font-['Sora',sans-serif] text-lg font-bold ${
+                  isDarkMode ? "text-white" : "text-[#173124]"
+                }`}>
                   Result: {calcResult.status} ({calcResult.percentile})
                 </h4>
               </div>
-              <p className={`text-xs ${isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"}`}>
+              <p className={`font-['Manrope',sans-serif] text-sm font-medium leading-relaxed ${
+                isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"
+              }`}>
                 {calcResult.advice}
               </p>
             </div>
