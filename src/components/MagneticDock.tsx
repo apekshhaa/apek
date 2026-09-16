@@ -425,7 +425,7 @@ function MagneticDockBase({
       ref={rootRef}
       data-motion={staticMode ? "static" : "animated"}
       data-paused={paused ? "true" : "false"}
-      className={cn("relative w-full select-none", className)}
+      className={cn("relative w-full select-none pointer-events-none", className)}
       style={style}
       {...props}
     >
@@ -433,7 +433,7 @@ function MagneticDockBase({
         <div
           ref={barRef}
           className={cn(
-            "relative flex max-w-full flex-wrap items-end justify-center gap-3.5 rounded-[22px] px-[18px] py-3",
+            "relative flex max-w-full flex-wrap items-end justify-center gap-3.5 rounded-[22px] px-[18px] py-3 pointer-events-auto",
             "border border-[var(--motiq-border,#263449)] backdrop-blur-[14px]",
           )}
           style={{

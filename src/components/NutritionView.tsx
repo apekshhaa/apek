@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChildProfile, MealItem } from "../types";
-import { Sun, SunMedium, Apple, Moon, Wheat, Zap, Dumbbell, Flame, Sparkles, Leaf, RefreshCw, Lightbulb } from "lucide-react";
+import { Coffee, Utensils, Apple, Moon, RefreshCw, ChevronDown } from "lucide-react";
 
 interface NutritionViewProps {
   child: ChildProfile;
@@ -13,7 +13,7 @@ const defaultMeals: MealItem[] = [
     mealType: "Breakfast",
     time: "8:00 AM",
     title: "Oatmeal with mashed bananas & almond dust",
-    icon: "sun",
+    icon: "coffee",
     tags: [
       { label: "Fiber", icon: "wheat", bgClass: "bg-[#cae8c9]", textClass: "text-[#4f6951]" },
       { label: "Energy", icon: "zap", bgClass: "bg-[#cae8c9]", textClass: "text-[#4f6951]" },
@@ -24,7 +24,7 @@ const defaultMeals: MealItem[] = [
     mealType: "Lunch",
     time: "12:30 PM",
     title: "Soft lentil soup (Dal) with mashed rice & ghee",
-    icon: "sun-medium",
+    icon: "utensils",
     tags: [
       { label: "Protein", icon: "dumbbell", bgClass: "bg-[#b0cdbb]", textClass: "text-[#324c3e]" },
       { label: "Iron", icon: "flame", bgClass: "bg-[#b0cdbb]", textClass: "text-[#324c3e]" },
@@ -56,6 +56,27 @@ const defaultMeals: MealItem[] = [
 export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode = false }) => {
   const [meals, setMeals] = useState<MealItem[]>(defaultMeals);
   const [swappingId, setSwappingId] = useState<string | null>(null);
+  const [expandedNutritionId, setExpandedNutritionId] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setCurrentTime(new Date()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const dayProgress = (() => {
+    const start = 8 * 60;
+    const end = 19 * 60;
+    const minutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+    return Math.min(100, Math.max(0, ((minutes - start) / (end - start)) * 100));
+  })();
+
+  const nutritionByMeal: Record<string, string> = {
+    m1: "Approx. 220 kcal · 7 g protein · 5 g fiber",
+    m2: "Approx. 280 kcal · 10 g protein · 4 mg iron",
+    m3: "Approx. 140 kcal · 5 g protein · 3 g fiber",
+    m4: "Approx. 190 kcal · 4 g protein · 3 g fiber",
+  };
 
   const handleSwapMeal = (mealId: string) => {
     setSwappingId(mealId);
@@ -81,10 +102,10 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
   const renderMealIcon = (icon: string) => {
     const iconClass = isDarkMode ? "text-[#3fff80]" : "text-[#173124]";
     switch (icon) {
-      case "sun":
-        return <Sun className={`w-5 h-5 ${iconClass}`} />;
-      case "sun-medium":
-        return <SunMedium className={`w-5 h-5 ${iconClass}`} />;
+      case "coffee":
+        return <Coffee className={`w-5 h-5 ${iconClass}`} />;
+      case "utensils":
+        return <Utensils className={`w-5 h-5 ${iconClass}`} />;
       case "apple":
         return <Apple className={`w-5 h-5 ${iconClass}`} />;
       case "moon":
@@ -93,28 +114,8 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
     }
   };
 
-  const renderTagIcon = (icon: string) => {
-    switch (icon) {
-      case "wheat":
-        return <Wheat className="w-3.5 h-3.5" />;
-      case "zap":
-        return <Zap className="w-3.5 h-3.5" />;
-      case "dumbbell":
-        return <Dumbbell className="w-3.5 h-3.5" />;
-      case "flame":
-        return <Flame className="w-3.5 h-3.5" />;
-      case "sparkles":
-        return <Sparkles className="w-3.5 h-3.5" />;
-      case "leaf":
-        return <Leaf className="w-3.5 h-3.5" />;
-      case "moon":
-      default:
-        return <Moon className="w-3.5 h-3.5" />;
-    }
-  };
-
   return (
-    <div className="flex flex-col w-full relative pt-4 pb-28 px-5 max-w-lg mx-auto gap-5">
+    <div className="flex flex-col w-full relative pt-8 pb-28 px-5 max-w-lg mx-auto gap-5">
       {/* Header */}
       <div className="flex flex-col items-start w-full">
         <h1 className={`font-['Sora',sans-serif] text-2xl sm:text-3xl font-bold tracking-tight leading-tight ${
@@ -130,9 +131,10 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
       </div>
 
       {/* Timeline List */}
-      <div className={`relative pl-12 space-y-6 mt-2 before:content-[''] before:absolute before:left-5 before:top-4 before:bottom-4 before:w-[2px] ${
-        isDarkMode ? "before:bg-[#22392b]" : "before:bg-[#cae8c9]"
-      }`}>
+      <div className="relative pl-12 space-y-6 mt-2">
+        <div className={`pointer-events-none absolute top-4 bottom-4 z-[1] w-1.5 rounded-full ${isDarkMode ? "bg-[#31553d]" : "bg-[#cae8c9]"}`} style={{ left: "20px" }} aria-hidden="true">
+          <div className={`absolute left-0 top-0 w-full rounded-full transition-[height] duration-1000 ease-out ${isDarkMode ? "bg-[#3fff80]" : "bg-[#86bf15]"}`} style={{ height: `${dayProgress}%` }} />
+        </div>
         {meals.map((meal) => (
           <div key={meal.id} className="relative">
             <div className={`absolute -left-12 top-1 w-10 h-10 rounded-full flex items-center justify-center shadow-xs z-10 border transition-transform hover:scale-105 ${
@@ -141,7 +143,7 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
               {renderMealIcon(meal.icon)}
             </div>
 
-            <div className={`p-5 sm:p-6 rounded-3xl border shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all ${
+            <div className={`relative z-10 p-5 sm:p-6 rounded-3xl border shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all ${
               isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
             }`}>
               <div className="flex justify-between items-center mb-2">
@@ -166,20 +168,17 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
               <div className={`flex items-center justify-between flex-wrap gap-2 pt-3 border-t ${
                 isDarkMode ? "border-[#22392b]" : "border-[#efeeea]"
               }`}>
-                <div className="flex flex-wrap gap-1.5">
-                  {meal.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className={`font-['Space_Grotesk',sans-serif] text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 ${
-                        isDarkMode
-                          ? "bg-[#1f3829] text-[#3fff80]"
-                          : "bg-[#cae8c9]/80 text-[#173124]"
-                      }`}
-                    >
-                      {renderTagIcon(tag.icon)}
-                      {tag.label}
-                    </span>
-                  ))}
+                <div className="flex flex-1 items-center">
+                  <button
+                    onClick={() => setExpandedNutritionId(expandedNutritionId === meal.id ? null : meal.id)}
+                    className={`font-['Manrope',sans-serif] text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-all ${
+                      isDarkMode ? "text-[#3fff80] hover:text-[#52ff8f]" : "text-[#173124] hover:opacity-80"
+                    }`}
+                    aria-expanded={expandedNutritionId === meal.id}
+                  >
+                    Read more
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expandedNutritionId === meal.id ? "rotate-180" : ""}`} />
+                  </button>
                 </div>
 
                 <button
@@ -195,33 +194,18 @@ export const NutritionView: React.FC<NutritionViewProps> = ({ child, isDarkMode 
                   {swappingId === meal.id ? "Swapping..." : "Swap Option"}
                 </button>
               </div>
+              {expandedNutritionId === meal.id && (
+                <div className={`mt-3 rounded-xl px-3 py-2.5 font-['Manrope',sans-serif] text-xs font-medium ${
+                  isDarkMode ? "bg-[#1f3829] text-[#b0c4b5]" : "bg-[#eef5e9] text-[#4f6951]"
+                }`}>
+                  Nutritional value: {nutritionByMeal[meal.id]}
+                </div>
+              )}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Tip Banner */}
-      <div className={`p-6 rounded-3xl border flex items-start gap-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all ${
-        isDarkMode ? "bg-[#14231b] border-[#22392b]" : "bg-white/80 border-[#e3e2df]"
-      }`}>
-        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 mt-0.5 ${
-          isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#cae8c9] text-[#173124]"
-        }`}>
-          <Lightbulb className="w-5 h-5" />
-        </div>
-        <div>
-          <h3 className={`font-['Sora',sans-serif] font-bold text-base mb-1 ${
-            isDarkMode ? "text-white" : "text-[#173124]"
-          }`}>
-            Parent Tip
-          </h3>
-          <p className={`font-['Manrope',sans-serif] text-xs sm:text-sm font-medium leading-relaxed ${
-            isDarkMode ? "text-[#d1d5db]" : "text-[#424844]"
-          }`}>
-            Keep portion sizes modest and introduce single foods gradually to monitor taste preferences and tolerance.
-          </p>
-        </div>
-      </div>
     </div>
   );
 };
