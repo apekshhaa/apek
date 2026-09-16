@@ -11,6 +11,7 @@ import { ProfileView } from "./components/ProfileView";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>("home");
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem("poshan_theme");
     return saved ? saved === "dark" : false;
@@ -105,6 +106,7 @@ export default function App() {
             vitals={vitals}
             onAddVitalRecord={handleAddVitalRecord}
             isDarkMode={isDarkMode}
+            onCalculatorModeChange={setIsCalculatorOpen}
           />
         )}
 
@@ -140,6 +142,7 @@ export default function App() {
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
         isDarkMode={isDarkMode}
+        hideOnMobile={activeTab === "growth-tracking" && isCalculatorOpen}
       />
     </div>
   );

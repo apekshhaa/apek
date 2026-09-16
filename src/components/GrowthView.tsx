@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { ChildProfile, VitalRecord } from "../types";
-import { Scale, Ruler, Plus, RefreshCw, ArrowRight, TrendingUp, CheckCircle2 } from "lucide-react";
+import { Scale, Ruler, Plus, RefreshCw, ArrowRight, TrendingUp } from "lucide-react";
 import { GrowthChart } from "./GrowthChart";
 import { OrbitStatusIndicator } from "./OrbitStatusIndicator";
 import { AnimatedCounter } from "./AnimatedCounter";
 import { RetroButton } from "./RetroButton";
+import { GrowthCalculatorJourney } from "./GrowthCalculatorJourney";
 
 interface GrowthViewProps {
   child: ChildProfile;
   vitals: VitalRecord;
   onAddVitalRecord: (record: VitalRecord) => void;
   isDarkMode?: boolean;
+  onCalculatorModeChange?: (isCalculator: boolean) => void;
 }
 
 export const GrowthView: React.FC<GrowthViewProps> = ({
@@ -18,9 +20,15 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
   vitals,
   onAddVitalRecord,
   isDarkMode = false,
+  onCalculatorModeChange,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<"dashboard" | "calculator">("dashboard");
   const [activeMetric, setActiveMetric] = useState<"weight" | "height" | "muac">("weight");
+
+  React.useEffect(() => {
+    onCalculatorModeChange?.(activeSubTab === "calculator");
+    return () => onCalculatorModeChange?.(false);
+  }, [activeSubTab, onCalculatorModeChange]);
 
   // Calculator Form State
   const [gender, setGender] = useState<"boy" | "girl">(child.gender);
@@ -28,7 +36,6 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
   const [ageMonths, setAgeMonths] = useState<number | "">(child.ageMonths);
   const [weightInput, setWeightInput] = useState<string>(vitals.weight.toString());
   const [heightInput, setHeightInput] = useState<string>(vitals.height.toString());
-
   const [isCalculating, setIsCalculating] = useState(false);
   const [calcResult, setCalcResult] = useState<{
     bmi: string;
@@ -37,8 +44,13 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
     advice: string;
   } | null>(null);
 
-  const handleCalculate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCalculate = async (values: {
+    gender: "boy" | "girl";
+    ageYears: number | "";
+    ageMonths: number | "";
+    weight: string;
+    height: string;
+  }) => {
     setIsCalculating(true);
     setCalcResult(null);
 
@@ -47,11 +59,11 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          gender,
-          ageYears: Number(ageYears) || 0,
-          ageMonths: Number(ageMonths) || 0,
-          weight: Number(weightInput) || 14.2,
-          height: Number(heightInput) || 92.5,
+          gender: values.gender,
+          ageYears: Number(values.ageYears) || 0,
+          ageMonths: Number(values.ageMonths) || 0,
+          weight: Number(values.weight) || 14.2,
+          height: Number(values.height) || 92.5,
         }),
       });
       const data = await res.json();
@@ -63,8 +75,8 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
       });
 
       onAddVitalRecord({
-        weight: Number(weightInput) || 14.2,
-        height: Number(heightInput) || 92.5,
+        weight: Number(values.weight) || 14.2,
+        height: Number(values.height) || 92.5,
         muac: vitals.muac,
         date: "Today",
         bmi: Number(data.bmi) || 16.2,
@@ -136,28 +148,23 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
         <div className="flex flex-col gap-5">
           {/* Status Header Card */}
           <div className={`rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-between border transition-all ${
-            isDarkMode ? "bg-[#14231b] border-[#22392b] text-[#f1f5f2]" : "bg-[#173124] text-white border-transparent"
+            isDarkMode ? "bg-[#14231b] border-[#22392b] text-[#f1f5f2]" : "bg-gradient-to-br from-[#e4f1df] to-[#d5e8d0] text-[#173124] border-[#cae8c9]"
           }`}>
             <div className="flex flex-col">
               <div className="flex items-center gap-2 mb-1.5">
                 <OrbitStatusIndicator isDarkMode={isDarkMode} />
                 <span className={`font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-[1.75px] ${
-                  isDarkMode ? "text-[#3fff80]" : "text-[#cae8c9]"
+                  isDarkMode ? "text-[#3fff80]" : "text-[#4f6951]"
                 }`}>
                   Current Status
                 </span>
               </div>
-              <h3 className="font-['Sora',sans-serif] text-2xl font-bold tracking-tight text-white">On Track</h3>
+              <h3 className={`font-['Sora',sans-serif] text-2xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-[#173124]"}`}>On Track</h3>
               <p className={`font-['Manrope',sans-serif] text-xs sm:text-sm font-medium mt-1 ${
-                isDarkMode ? "text-[#d1d8d3]" : "text-[#cae8c9]"
+                isDarkMode ? "text-[#d1d8d3]" : "text-[#4f6951]"
               }`}>
                 WHO Percentile: {vitals.percentile} percentile
               </p>
-            </div>
-            <div className={`w-13 h-13 rounded-2xl flex items-center justify-center shrink-0 ${
-              isDarkMode ? "bg-[#1f3829] text-[#3fff80]" : "bg-[#2d4739] text-[#3fff80]"
-            }`}>
-              <CheckCircle2 className="w-7 h-7" />
             </div>
           </div>
 
@@ -281,21 +288,18 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
         </div>
       ) : (
         /* Calculator & Form Mode */
-        <div className="flex flex-col gap-5">
-          <section className="flex flex-col gap-1">
-            <h2 className={`font-['Sora',sans-serif] text-xl sm:text-2xl font-bold tracking-tight ${
-              isDarkMode ? "text-white" : "text-[#173124]"
-            }`}>
-              WHO Growth Calculator
-            </h2>
-            <p className={`font-['Manrope',sans-serif] text-sm font-medium ${
-              isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
-            }`}>
-              Enter measurements below to evaluate growth percentile.
-            </p>
-          </section>
-
-          <form onSubmit={handleCalculate} className="flex flex-col gap-4">
+        <>
+        <GrowthCalculatorJourney
+          child={child}
+          vitals={vitals}
+          isDarkMode={isDarkMode}
+          isCalculating={isCalculating}
+          calcResult={calcResult}
+          onCalculate={handleCalculate}
+          onSaved={() => setActiveSubTab("dashboard")}
+        />
+        {/* Legacy form state is intentionally owned by GrowthCalculatorJourney. */}
+        {false && <div><form onSubmit={(event) => { event.preventDefault(); void handleCalculate({ gender, ageYears, ageMonths, weight: weightInput, height: heightInput }); }}>
             {/* Gender Toggle */}
             <div className="flex flex-col gap-2">
               <span className={`font-['Space_Grotesk',sans-serif] text-[12px] font-semibold uppercase tracking-[1.5px] ${
@@ -444,7 +448,8 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
               </p>
             </div>
           )}
-        </div>
+        </div>}
+        </>
       )}
     </div>
   );

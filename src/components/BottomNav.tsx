@@ -7,9 +7,10 @@ interface BottomNavProps {
   activeTab: NavTab;
   onTabChange: (tab: NavTab) => void;
   isDarkMode?: boolean;
+  hideOnMobile?: boolean;
 }
 
-export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, isDarkMode = false }) => {
+export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, isDarkMode = false, hideOnMobile = false }) => {
   // Memoize so icon JSX identity stays stable across parent re-renders.
   // Only recreates if isDarkMode changes (which is infrequent).
   const dockItems: DockItem[] = useMemo(() => [
@@ -46,14 +47,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, is
   ], [isDarkMode]);
 
   return (
-    <div className="fixed bottom-0 left-0 w-full z-50">
-      <div className="max-w-lg mx-auto">
+    <div className={`fixed bottom-0 left-0 w-full z-50 pointer-events-none ${hideOnMobile ? "hidden sm:block" : ""}`}>
+      <div className="max-w-lg mx-auto pointer-events-none">
         <MagneticDock
           items={dockItems}
           activeId={activeTab}
           onSelect={(id) => onTabChange(id as NavTab)}
           idleWave={false}
-          tooltip={true}
+          tooltip={false}
           lift={22}
           maxScale={1.45}
           pauseWhenHidden={false}
