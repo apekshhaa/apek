@@ -8,3 +8,4 @@ coverage/
 !.env.example
 **/*.mp4
 dist/cartoons/*.mp4
+public/cartoons/*.mp4
