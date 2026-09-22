@@ -3,6 +3,8 @@ import { NavTab, ChildProfile, VitalRecord } from "../types";
 import { Volume2, Camera, RefreshCw, X, CheckCircle2, Utensils } from "lucide-react";
 import { AnimatedCounter } from "./AnimatedCounter";
 import { RetroButton } from "./RetroButton";
+import { ScanOverlay } from "./ScanOverlay";
+import CardSwap, { Card } from "./CardSwap";
 
 interface AiScanViewProps {
   child: ChildProfile;
@@ -15,8 +17,18 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
   const [scanMode, setScanMode] = useState<"camera" | "distraction" | "result">("camera");
   const [isDistractingSoundsOn, setIsDistractingSoundsOn] = useState(false);
   const [isCapturing, setIsCalculating] = useState(false);
+  const [selectedMascot, setSelectedMascot] = useState("cheetah");
+  const [isMascotPlaying, setIsMascotPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pipVideoRef = useRef<HTMLVideoElement | null>(null);
+  const mascotPreviewTimers = useRef<Record<string, number>>({});
+  const localCartoonVideoPath = (name: string) => `/cartoons/${name}.mp4`;
+
+  const mascots = [
+    { id: "cheetah", label: "Cheetah", src: localCartoonVideoPath("cheetah") },
+    { id: "albatross", label: "Albatross", src: localCartoonVideoPath("albatross") },
+    { id: "shark", label: "Shark", src: localCartoonVideoPath("shark") }
+  ];
 
   const playSoothingSound = () => {
     try {
@@ -108,7 +120,7 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
               isDarkMode ? "from-[#0a120e]/40 via-transparent to-[#0a120e]/80" : "from-[#faf9f5]/30 via-transparent to-[#faf9f5]/80"
             }`} />
 
-            {/* Silhouette Outline */}
+            <ScanOverlay active={isCapturing} isDarkMode={isDarkMode} />
             <svg
               className={`w-full h-[300px] drop-shadow-md opacity-85 z-10 animate-pulse ${
                 isDarkMode ? "text-[#3fff80]" : "text-[#173124]"
@@ -254,34 +266,96 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
             <p className={`font-['Manrope',sans-serif] text-sm font-medium mt-1 ${
               isDarkMode ? "text-[#b0c4b5]" : "text-[#424844]"
             }`}>
-              Tap the bird mascot to play cheerful chimes.
+              Pick a mascot to keep {child.name} focused.
             </p>
           </div>
 
-          <div
-            onClick={playSoothingSound}
-            className="relative w-56 h-56 flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95 transition-transform my-2"
-          >
-            <div className={`absolute inset-0 rounded-full blur-xl opacity-40 ${
-              isDarkMode ? "bg-[#3fff80]" : "bg-[#cae8c9]"
-            }`} />
-            <svg
-              className="w-full h-full drop-shadow-lg relative z-10"
-              viewBox="0 0 200 200"
-              xmlns="http://www.w3.org/2000/svg"
+          <div className="relative flex w-full justify-center py-8">
+            <CardSwap
+              width="min(100%, 280px)"
+              height={270}
+              cardDistance={20}
+              verticalDistance={18}
+              delay={3600}
+              pauseOnHover
+              stopOnClick
+              skewAmount={2}
+              isDarkMode={isDarkMode}
+              onCardClick={(index) => {
+                const mascot = mascots[index];
+                if (mascot) {
+                  setSelectedMascot(mascot.id);
+                  setIsMascotPlaying(true);
+                  playSoothingSound();
+                }
+              }}
             >
-              <path
-                d="M40 100 C40 40 160 40 160 100 C160 160 40 160 40 100 Z"
-                fill={isDarkMode ? "#3fff80" : "#cae8c9"}
-              />
-              <circle cx="80" cy="90" r="8" fill="#173124" />
-              <circle cx="120" cy="90" r="8" fill="#173124" />
-              <polygon points="90,105 110,105 100,120" fill="#2d4739" />
-              <path d="M30 90 Q10 110 30 130 Q50 110 30 90 Z" fill="#2d4739" opacity="0.6" />
-              <path d="M170 90 Q190 110 170 130 Q150 110 170 90 Z" fill="#2d4739" opacity="0.6" />
-            </svg>
+              {mascots.map((mascot) => (
+                <Card
+                  key={mascot.id}
+                  className={`overflow-hidden border-2 bg-black ${
+                    selectedMascot === mascot.id
+                      ? isDarkMode ? "border-[#3fff80]" : "border-[#173124]"
+                      : isDarkMode ? "border-[#22392b]" : "border-[#e3e2df]"
+                  }`}
+                >
+                  <video
+                    src={mascot.src}
+                    muted
+                    playsInline
+                    onMouseEnter={(event) => {
+                      const preview = event.currentTarget;
+                      window.clearTimeout(mascotPreviewTimers.current[mascot.id]);
+                      preview.currentTime = 0;
+                      void preview.play();
+                      mascotPreviewTimers.current[mascot.id] = window.setTimeout(() => {
+                        preview.pause();
+                        preview.currentTime = 0;
+                      }, 10000);
+                    }}
+                    onMouseLeave={(event) => {
+                      const preview = event.currentTarget;
+                      window.clearTimeout(mascotPreviewTimers.current[mascot.id]);
+                      preview.pause();
+                      preview.currentTime = 0;
+                    }}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/85 to-transparent px-4 pb-4 pt-10">
+                    <span className="font-['Sora',sans-serif] text-lg font-bold text-white">{mascot.label}</span>
+                    {selectedMascot === mascot.id && <CheckCircle2 className="h-5 w-5 text-[#3fff80]" />}
+                  </div>
+                </Card>
+              ))}
+            </CardSwap>
           </div>
 
+          {isMascotPlaying && (
+            <div className={`relative w-full max-w-[360px] overflow-hidden rounded-[28px] border-2 bg-black shadow-[0_12px_40px_rgba(0,0,0,0.28)] ${
+              isDarkMode ? "border-[#3fff80]" : "border-[#173124]"
+            }`}>
+              <video
+                key={selectedMascot}
+                src={mascots.find((mascot) => mascot.id === selectedMascot)?.src}
+                autoPlay
+                muted
+                playsInline
+                onLoadedMetadata={(event) => {
+                  event.currentTarget.currentTime = 0;
+                  void event.currentTarget.play();
+                }}
+                className="aspect-video w-full object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/90 to-transparent px-5 pb-5 pt-14">
+                <span className="font-['Sora',sans-serif] text-xl font-bold text-white">
+                  {mascots.find((mascot) => mascot.id === selectedMascot)?.label}
+                </span>
+                <span className="font-['Space_Grotesk',sans-serif] text-[11px] font-semibold uppercase tracking-[1.5px] text-[#3fff80]">
+                  Playing
+                </span>
+              </div>
+            </div>
+          )}
           <button
             onClick={() => setScanMode("camera")}
             className={`font-['Manrope',sans-serif] text-sm font-bold px-6 py-3 rounded-full flex items-center gap-2 border transition-all active:scale-95 ${

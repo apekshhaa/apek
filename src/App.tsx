@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavTab, ChildProfile, VitalRecord } from "./types";
+import { NavTab, ChildProfile, HistoryRecord, VitalRecord } from "./types";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
 import { HomeView } from "./components/HomeView";
@@ -9,6 +9,7 @@ import { NutritionView } from "./components/NutritionView";
 import { PoshanAiView } from "./components/PoshanAiView";
 import { ProfileView } from "./components/ProfileView";
 import { AuthOnboardingView } from "./components/AuthOnboardingView";
+import { ChildHistoryView } from "./components/ChildHistoryView";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>("home");
@@ -28,7 +29,7 @@ export default function App() {
     }
   }, [isDarkMode]);
 
-  const [child] = useState<ChildProfile>({
+  const [child, setChild] = useState<ChildProfile>({
     name: "Aarav",
     parentNames: "Sarah & Leo",
     accountType: "Premium Account",
@@ -40,14 +41,31 @@ export default function App() {
     statusDescription: "Following a healthy growth path compared to WHO standards.",
   });
 
-  const [vitals, setVitals] = useState<VitalRecord>({
-    weight: 14.2,
-    height: 92.5,
-    muac: 14.5,
-    date: "Updated 2 days ago",
-    bmi: 16.2,
-    percentile: "75th",
+  const [vitals, setVitals] = useState<VitalRecord>(() => {
+    try {
+      const saved = localStorage.getItem("poshan_latest_vitals");
+      return saved ? (JSON.parse(saved) as VitalRecord) : { weight: 14.2, height: 92.5, muac: 14.5, date: "Updated 2 days ago", bmi: 16.2, percentile: "75th" };
+    } catch {
+      return { weight: 14.2, height: 92.5, muac: 14.5, date: "Updated 2 days ago", bmi: 16.2, percentile: "75th" };
+    }
   });
+
+  const [history, setHistory] = useState<HistoryRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem("poshan_child_history");
+      return saved ? (JSON.parse(saved) as HistoryRecord[]) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("poshan_child_history", JSON.stringify(history));
+  }, [history]);
+
+  useEffect(() => {
+    localStorage.setItem("poshan_latest_vitals", JSON.stringify(vitals));
+  }, [vitals]);
 
   if (!isAuthenticated) {
     return <AuthOnboardingView onAuthenticated={() => setIsAuthenticated(true)} />;
@@ -65,6 +83,8 @@ export default function App() {
         return "Nutrition Plan";
       case "child-profile":
         return "Child Profile";
+      case "child-history":
+        return "Child History";
       case "poshan-ai":
         return "PoshanAi Voice";
       default:
@@ -72,8 +92,21 @@ export default function App() {
     }
   };
 
-  const handleAddVitalRecord = (record: VitalRecord) => {
+  const handleAddVitalRecord = (record: VitalRecord, ageYears = child.ageYears, ageMonths = child.ageMonths) => {
+    const now = new Date();
     setVitals(record);
+    setHistory((previous) => [
+      {
+        ...record,
+        id: `${Date.now()}`,
+        recordedAt: now.toLocaleString([], { dateStyle: "medium", timeStyle: "short" }),
+        ageYears,
+        ageMonths,
+        healthStatus: "On Track",
+        source: "Growth tracking",
+      },
+      ...previous,
+    ]);
   };
 
   return (
@@ -137,7 +170,12 @@ export default function App() {
             vitals={vitals}
             isDarkMode={isDarkMode}
             onToggleTheme={() => setIsDarkMode((prev) => !prev)}
+            onHistoryClick={() => setActiveTab("child-history")}
           />
+        )}
+
+        {activeTab === "child-history" && (
+          <ChildHistoryView child={child} vitals={vitals} history={history} isDarkMode={isDarkMode} />
         )}
       </main>
 

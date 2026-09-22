@@ -20,6 +20,7 @@ export interface CardSwapProps {
   verticalDistance?: number;
   delay?: number;
   pauseOnHover?: boolean;
+  stopOnClick?: boolean;
   onCardClick?: (idx: number) => void;
   skewAmount?: number;
   easing?: 'linear' | 'elastic';
@@ -79,6 +80,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   verticalDistance = 70,
   delay = 5000,
   pauseOnHover = false,
+  stopOnClick = false,
   onCardClick,
   skewAmount = 6,
   easing = 'elastic',
@@ -233,6 +235,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
           onClick: (e: React.MouseEvent<HTMLDivElement>) => {
             child.props.onClick?.(e);
             onCardClick?.(i);
+            if (stopOnClick) {
+              tlRef.current?.pause();
+              clearInterval(intervalRef.current);
+              return;
+            }
             // Manually advance and restart interval so clicking never freezes
             clearInterval(intervalRef.current);
             swapRef.current();
