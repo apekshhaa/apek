@@ -150,21 +150,23 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
       {activeSubTab === "dashboard" ? (
         <div className="flex flex-col gap-5">
           {/* Status Header Card */}
-          <div className={`rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-between border transition-all ${
-            isDarkMode ? "bg-[#14231b] border-[#22392b] text-[#f1f5f2]" : "bg-gradient-to-br from-[#e4f1df] to-[#d5e8d0] text-[#173124] border-[#cae8c9]"
+          <div className={`rounded-3xl p-6 shadow-[0_10px_30px_rgba(23,49,36,0.12)] flex items-center justify-between border transition-all ${
+            isDarkMode
+              ? "bg-[#14231b] border-[#22392b] text-[#f1f5f2]"
+              : "bg-gradient-to-br from-[#173124] via-[#1d3c2c] to-[#254d38] text-white border-[#2a503b]"
           }`}>
             <div className="flex flex-col">
               <div className="flex items-center gap-2 mb-1.5">
-                <OrbitStatusIndicator isDarkMode={isDarkMode} />
+                <OrbitStatusIndicator isDarkMode={true} />
                 <span className={`font-['Space_Grotesk',sans-serif] text-[11.5px] font-semibold uppercase tracking-[1.75px] ${
-                  isDarkMode ? "text-[#3fff80]" : "text-[#4f6951]"
+                  isDarkMode ? "text-[#3fff80]" : "text-[#3fff80]"
                 }`}>
                   Current Status
                 </span>
               </div>
-              <h3 className={`font-['Sora',sans-serif] text-2xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-[#173124]"}`}>On Track</h3>
+              <h3 className={`font-['Sora',sans-serif] text-2xl font-bold tracking-tight ${isDarkMode ? "text-white" : "text-white"}`}>On Track</h3>
               <p className={`font-['Manrope',sans-serif] text-xs sm:text-sm font-medium mt-1 ${
-                isDarkMode ? "text-[#d1d8d3]" : "text-[#4f6951]"
+                isDarkMode ? "text-[#d1d8d3]" : "text-[#d1e6d6]"
               }`}>
                 WHO Percentile: {vitals.percentile} percentile
               </p>

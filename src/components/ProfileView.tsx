@@ -86,9 +86,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ child, isDarkMode = fa
   return (
     <div className={`flex flex-col w-full max-w-lg mx-auto px-5 pb-32 font-['Geist',sans-serif] ${ink}`}>
       <section className="pt-2 pb-6">
-        <div className="flex items-center justify-end mb-5">
-          <span className={`font-['Space_Grotesk',sans-serif] text-[11px] ${muted}`}>POSHANEYE</span>
-        </div>
         <h1 style={{ fontSize: profileTitleSize }} className="font-['Sora',sans-serif] leading-[0.86] font-extrabold tracking-[-0.07em] uppercase break-words">{currentChild.name}'s<br />profile</h1>
         <button type="button" onClick={onHistoryClick} className={`group mt-5 flex w-full justify-between border-t ${rule} pt-3 text-left font-['Space_Grotesk',sans-serif] text-[11px] uppercase tracking-[1.5px] ${muted}`}>
           <span>Child history</span><span className="transition-transform group-hover:translate-x-1">01—05 <ChevronRight className="ml-2 inline h-3.5 w-3.5" /></span>

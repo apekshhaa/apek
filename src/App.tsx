@@ -10,6 +10,7 @@ import { PoshanAiView } from "./components/PoshanAiView";
 import { ProfileView } from "./components/ProfileView";
 import { AuthOnboardingView } from "./components/AuthOnboardingView";
 import { ChildHistoryView } from "./components/ChildHistoryView";
+import { AmbientBackground } from "./components/AmbientBackground";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>("home");
@@ -114,9 +115,10 @@ export default function App() {
       className={`min-h-screen font-['Geist',sans-serif] relative flex flex-col transition-colors duration-300 ${
         isDarkMode
           ? "bg-[#0a120e] text-[#f1f5f2] selection:bg-[#1f4a2d]"
-          : "bg-[#faf9f5] text-[#1b1c1a] selection:bg-[#cae8c9]"
+          : "bg-[#faf8f2] text-[#1b1c1a] selection:bg-[#cae8c9]"
       }`}
     >
+      <AmbientBackground />
       <Header
         title={getPageTitle()}
         activeTab={activeTab}

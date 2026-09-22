@@ -30,19 +30,15 @@ const inputBaseClass =
 const roleConfig = {
   parent: {
     label: "Parent",
-    subtitle: "Caregiver access",
     description: "Manage your child's growth and nutrition",
     icon: UserRound,
     tone: "from-[#142e20] via-[#1a3827] to-[#29523b]",
-    chip: "bg-[#e4efe2] text-[#173124]",
   },
   healthcare: {
     label: "Healthcare Worker",
-    subtitle: "Clinical access",
     description: "Monitor and manage child health records",
     icon: Stethoscope,
     tone: "from-[#11271b] via-[#173424] to-[#254b37]",
-    chip: "bg-[#e4efe2] text-[#173124]",
   },
 } as const;
 
@@ -230,18 +226,8 @@ export function AuthOnboardingView({ onAuthenticated }: AuthOnboardingViewProps)
 
           {/* INNER TEXT WRAPPER WITH PADDING */}
           <div className="relative z-10 px-6">
-            {/* POSHANEYE Branding Badge */}
-            <div className="flex items-center justify-between">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-[#cae8c9]/30 bg-white/10 px-3 py-1 backdrop-blur-md">
-                <Sparkles className="h-3.5 w-3.5 text-[#c0e862]" />
-                <span className="font-['Space_Grotesk',sans-serif] text-[10px] font-bold uppercase tracking-[0.22em] text-[#edf6ee]">
-                  POSHANEYE
-                </span>
-              </div>
-            </div>
-
             {/* Welcome Text Content */}
-            <div className="mt-5 pb-2">
+            <div className="pt-2 pb-2">
               <h1 className="font-['Sora',sans-serif] text-[2.5rem] sm:text-[2.75rem] font-extrabold leading-[1.05] tracking-[-0.05em] text-[#f6fbf7]">
                 Welcome
               </h1>
@@ -256,12 +242,9 @@ export function AuthOnboardingView({ onAuthenticated }: AuthOnboardingViewProps)
         </div>
 
         {/* CREAM ROLE SELECTION AREA (BOTTOM - INSIDE SAME CONTAINER) */}
-        <div className="relative bg-[#faf7f2] px-5 sm:px-6 pb-6 pt-1">
+        <div className="relative bg-[#faf7f2] px-5 sm:px-6 pb-6 pt-3">
           <div className="mb-3.5">
-            <p className="font-['Space_Grotesk',sans-serif] text-[10px] font-bold uppercase tracking-[0.22em] text-[#51665e]">
-              CHOOSE YOUR ACCESS
-            </p>
-            <h2 className="mt-1 font-['Sora',sans-serif] text-[1.75rem] font-bold tracking-[-0.04em] text-[#173124]">
+            <h2 className="font-['Sora',sans-serif] text-[1.75rem] font-bold tracking-[-0.04em] text-[#173124]">
               Who are you?
             </h2>
           </div>
@@ -293,12 +276,7 @@ export function AuthOnboardingView({ onAuthenticated }: AuthOnboardingViewProps)
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div
-                      className={`inline-flex items-center rounded-full ${config.chip} px-2 py-0.5 font-['Space_Grotesk',sans-serif] text-[8.5px] font-bold uppercase tracking-[0.18em]`}
-                    >
-                      {config.subtitle}
-                    </div>
-                    <h3 className="mt-1 font-['Sora',sans-serif] text-[1.2rem] font-bold tracking-[-0.03em] text-[#173124]">
+                    <h3 className="font-['Sora',sans-serif] text-[1.2rem] font-bold tracking-[-0.03em] text-[#173124]">
                       {config.label}
                     </h3>
                     <p className="mt-0.5 font-['Manrope',sans-serif] text-[12px] leading-[1.35] text-[#526359]">
@@ -349,14 +327,9 @@ export function AuthOnboardingView({ onAuthenticated }: AuthOnboardingViewProps)
             <ContourPattern />
             <div className="relative z-10 px-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#cae8c9]/30 bg-white/10 px-2.5 py-0.5 font-['Space_Grotesk',sans-serif] text-[9px] font-bold uppercase tracking-[0.2em] text-[#d6efd4]">
-                    {roleName} Access
-                  </span>
-                  <h2 className="mt-3 font-['Sora',sans-serif] text-[2.1rem] font-extrabold tracking-[-0.05em]">
-                    {roleName}
-                  </h2>
-                </div>
+                <h2 className="font-['Sora',sans-serif] text-[2.1rem] font-extrabold tracking-[-0.05em]">
+                  {roleName}
+                </h2>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md">
                   {activeRole && (() => {
                     const Icon = activeRole.icon;
@@ -524,15 +497,7 @@ export function AuthOnboardingView({ onAuthenticated }: AuthOnboardingViewProps)
           <div className="relative overflow-hidden bg-gradient-to-br from-[#122b1e] via-[#173124] to-[#254d36] pt-6 text-[#f6fbf7]">
             <ContourPattern />
             <div className="relative z-10 px-6">
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-[#cae8c9]/30 bg-white/10 px-2.5 py-0.5 backdrop-blur-md">
-                  <ShieldCheck className="h-3.5 w-3.5 text-[#c0e862]" />
-                  <span className="font-['Space_Grotesk',sans-serif] text-[9px] font-bold uppercase tracking-[0.22em] text-[#edf6ee]">
-                    {isParent ? "Parent Access" : "Clinical Access"}
-                  </span>
-                </div>
-              </div>
-              <div className="mt-3 pb-2">
+              <div className="pt-2 pb-2">
                 <h2 className="font-['Sora',sans-serif] text-[1.95rem] font-extrabold tracking-[-0.05em] text-[#f6fbf7]">
                   {title}
                 </h2>
