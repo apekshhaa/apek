@@ -1,4 +1,4 @@
-export type NavTab = "home" | "growth-tracking" | "ai-scan" | "nutrition-plan" | "child-profile" | "poshan-ai";
+export type NavTab = "home" | "growth-tracking" | "ai-scan" | "nutrition-plan" | "child-profile" | "child-history" | "poshan-ai";
 
 export interface ChildProfile {
   name: string;
@@ -19,6 +19,15 @@ export interface VitalRecord {
   date: string;
   bmi?: number;
   percentile?: string;
+}
+
+export interface HistoryRecord extends VitalRecord {
+  id: string;
+  recordedAt: string;
+  ageYears: number;
+  ageMonths: number;
+  healthStatus: string;
+  source: "Growth tracking" | "AI scan";
 }
 
 export interface MealItem {

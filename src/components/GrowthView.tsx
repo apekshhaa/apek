@@ -10,7 +10,7 @@ import { GrowthCalculatorJourney } from "./GrowthCalculatorJourney";
 interface GrowthViewProps {
   child: ChildProfile;
   vitals: VitalRecord;
-  onAddVitalRecord: (record: VitalRecord) => void;
+  onAddVitalRecord: (record: VitalRecord, ageYears: number, ageMonths: number) => void;
   isDarkMode?: boolean;
   onCalculatorModeChange?: (isCalculator: boolean) => void;
 }
@@ -54,6 +54,17 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
     setIsCalculating(true);
     setCalcResult(null);
 
+    const weight = Number(values.weight);
+    const height = Number(values.height);
+    const safeWeight = Number.isFinite(weight) && weight > 0 ? weight : vitals.weight;
+    const safeHeight = Number.isFinite(height) && height > 0 ? height : vitals.height;
+    let result = {
+      bmi: vitals.bmi?.toString() || "--",
+      percentile: vitals.percentile || "Not assessed",
+      status: "On Track",
+      advice: `${child.name} is tracking within the current recorded range.`,
+    };
+
     try {
       const res = await fetch("/api/growth-calc", {
         method: "POST",
@@ -62,34 +73,26 @@ export const GrowthView: React.FC<GrowthViewProps> = ({
           gender: values.gender,
           ageYears: Number(values.ageYears) || 0,
           ageMonths: Number(values.ageMonths) || 0,
-          weight: Number(values.weight) || 14.2,
-          height: Number(values.height) || 92.5,
+          weight: safeWeight,
+          height: safeHeight,
         }),
       });
       const data = await res.json();
-      setCalcResult({
-        bmi: data.bmi || "16.2",
-        percentile: data.percentile || "75th",
+      result = {
+        bmi: data.bmi || result.bmi,
+        percentile: data.percentile || result.percentile,
         status: data.status || "On Track",
-        advice: data.advice || `${child.name} is tracking beautifully in the healthy range according to WHO curves.`,
-      });
-
-      onAddVitalRecord({
-        weight: Number(values.weight) || 14.2,
-        height: Number(values.height) || 92.5,
-        muac: vitals.muac,
-        date: "Today",
-        bmi: Number(data.bmi) || 16.2,
-        percentile: data.percentile || "75th",
-      });
+        advice: data.advice || result.advice,
+      };
     } catch {
-      setCalcResult({
-        bmi: "16.2",
-        percentile: "75th",
-        status: "On Track",
-        advice: `${child.name} is tracking beautifully and is currently in the healthy range for his age.`,
-      });
+      // Keep the entered measurements even when the percentile service is unavailable.
     } finally {
+      setCalcResult(result);
+      onAddVitalRecord(
+        { weight: safeWeight, height: safeHeight, muac: vitals.muac, date: "Today", bmi: Number(result.bmi) || undefined, percentile: result.percentile },
+        Number(values.ageYears) || 0,
+        Number(values.ageMonths) || 0,
+      );
       setIsCalculating(false);
     }
   };

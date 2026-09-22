@@ -19,12 +19,13 @@ interface ProfileViewProps {
   isDarkMode?: boolean;
   onToggleTheme?: () => void;
   onBackClick?: () => void;
+  onHistoryClick?: () => void;
 }
 
 type EditTarget = "child" | "parent" | null;
 type RowItem = { label: string; icon: React.ComponentType<{ className?: string }> };
 
-export const ProfileView: React.FC<ProfileViewProps> = ({ child, isDarkMode = false }) => {
+export const ProfileView: React.FC<ProfileViewProps> = ({ child, isDarkMode = false, onHistoryClick }) => {
   const [currentChild, setCurrentChild] = useState(child);
   const [parentName, setParentName] = useState(child.parentNames);
   const [accountType, setAccountType] = useState(child.accountType);
@@ -89,9 +90,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ child, isDarkMode = fa
           <span className={`font-['Space_Grotesk',sans-serif] text-[11px] ${muted}`}>POSHANEYE</span>
         </div>
         <h1 style={{ fontSize: profileTitleSize }} className="font-['Sora',sans-serif] leading-[0.86] font-extrabold tracking-[-0.07em] uppercase break-words">{currentChild.name}'s<br />profile</h1>
-        <div className={`mt-5 border-t ${rule} pt-3 flex justify-between font-['Space_Grotesk',sans-serif] text-[11px] uppercase tracking-[1.5px] ${muted}`}>
-          <span>Personal record</span><span>01—05</span>
-        </div>
+        <button type="button" onClick={onHistoryClick} className={`group mt-5 flex w-full justify-between border-t ${rule} pt-3 text-left font-['Space_Grotesk',sans-serif] text-[11px] uppercase tracking-[1.5px] ${muted}`}>
+          <span>Child history</span><span className="transition-transform group-hover:translate-x-1">01—05 <ChevronRight className="ml-2 inline h-3.5 w-3.5" /></span>
+        </button>
       </section>
 
       <EditorialSection index="01" label="Child profile" rule={rule} muted={muted}>
