@@ -134,3 +134,81 @@
   --color-chart-scale-05: var(--chart-scale-05);
   --color-chart-scale-pattern-color: var(--chart-scale-pattern-color);
 }
+
+.auth-shell {
+  background:
+    radial-gradient(circle at top left, rgba(125, 166, 131, 0.16), transparent 28%),
+    linear-gradient(180deg, #f7f3ec 0%, #f4f0e8 100%);
+}
+
+.auth-hero-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.auth-hero-pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+}
+
+.auth-wave {
+  filter: drop-shadow(0 -10px 18px rgba(23, 49, 36, 0.06));
+}
+
+.auth-hero-blob {
+  animation: floatSlow 9s ease-in-out infinite;
+}
+
+.auth-panel-forward {
+  animation: panelInRight 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.auth-panel-back {
+  animation: panelInLeft 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(10px, -8px, 0) scale(1.02);
+  }
+}
+
+@keyframes panelInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes panelInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

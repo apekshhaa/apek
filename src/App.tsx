@@ -8,10 +8,12 @@ import { AiScanView } from "./components/AiScanView";
 import { NutritionView } from "./components/NutritionView";
 import { PoshanAiView } from "./components/PoshanAiView";
 import { ProfileView } from "./components/ProfileView";
+import { AuthOnboardingView } from "./components/AuthOnboardingView";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>("home");
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem("poshan_theme");
     return saved ? saved === "dark" : false;
@@ -26,7 +28,7 @@ export default function App() {
     }
   }, [isDarkMode]);
 
-  const [child, setChild] = useState<ChildProfile>({
+  const [child] = useState<ChildProfile>({
     name: "Aarav",
     parentNames: "Sarah & Leo",
     accountType: "Premium Account",
@@ -46,6 +48,10 @@ export default function App() {
     bmi: 16.2,
     percentile: "75th",
   });
+
+  if (!isAuthenticated) {
+    return <AuthOnboardingView onAuthenticated={() => setIsAuthenticated(true)} />;
+  }
 
   const getPageTitle = (): string => {
     switch (activeTab) {
@@ -78,7 +84,6 @@ export default function App() {
           : "bg-[#faf9f5] text-[#1b1c1a] selection:bg-[#cae8c9]"
       }`}
     >
-      {/* Persistent Header */}
       <Header
         title={getPageTitle()}
         activeTab={activeTab}
@@ -89,7 +94,6 @@ export default function App() {
         onToggleTheme={() => setIsDarkMode((prev) => !prev)}
       />
 
-      {/* Main Content Area */}
       <main className="flex-1 w-full max-w-lg mx-auto overflow-x-hidden relative z-10 pt-16">
         {activeTab === "home" && (
           <HomeView
@@ -137,7 +141,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Fixed Bottom Navigation */}
       <BottomNav
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
