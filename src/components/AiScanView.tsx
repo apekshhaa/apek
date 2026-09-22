@@ -22,11 +22,12 @@ export const AiScanView: React.FC<AiScanViewProps> = ({ child, onNavigate, isDar
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pipVideoRef = useRef<HTMLVideoElement | null>(null);
   const mascotPreviewTimers = useRef<Record<string, number>>({});
+  const localCartoonVideoPath = (name: string) => `/cartoons/${name}.mp4`;
 
   const mascots = [
-    { id: "cheetah", label: "Cheetah", src: "/cartoons/cheetah.mp4" },
-    { id: "albatross", label: "Albatross", src: "/cartoons/albatross.mp4" },
-    { id: "shark", label: "Shark", src: "/cartoons/shark.mp4" }
+    { id: "cheetah", label: "Cheetah", src: localCartoonVideoPath("cheetah") },
+    { id: "albatross", label: "Albatross", src: localCartoonVideoPath("albatross") },
+    { id: "shark", label: "Shark", src: localCartoonVideoPath("shark") }
   ];
 
   const playSoothingSound = () => {
